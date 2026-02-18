@@ -1,73 +1,74 @@
-# React + TypeScript + Vite
+# 키즈노트 도우미
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+언어·문화 장벽이 있는 학부모를 위한 키즈노트 요약 및 가이드 AI 플랫폼
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 핵심 기능
 
-## React Compiler
+- [x] 온보딩 (Google 로그인 + 자녀 프로필 등록)
+- [x] 키즈노트 업로드 → 핵심 요약 및 중요도 분류 → 가이드 제공
+- [x] 자녀 프로필별 기록 아카이빙
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 화면 구성
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 1. 온보딩
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+**1-1. Google 로그인**
+- Google OAuth 기반 로그인
+- 로그인 완료 후 온보딩 단계 진입
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+**1-2. 언어 설정**
+- 모국어 선택 (토글)
+- 한국어 실력 선택: 상 / 중 / 하
+- AI 응답 언어 선택: 모국어 / 모국어 + 한국어 / 한국어
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+**1-3. 자녀 프로필 등록**
+- 미취학 자녀 수 선택
+- 자녀별 정보 입력: 이름, 성별, 나이
+- 자녀 이름 기반 프로필 단위 데이터 구조 생성
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 2. 메인 화면 (챗봇 인터페이스)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+**상단**
+- 직전 일자 TODO 요약
+- 준비물 알림 표시
+
+**하단**
+- 스크린샷 업로드 버튼
+- 텍스트 입력창 및 전송 버튼
+
+**처리 흐름**
+1. 이미지 또는 텍스트 업로드
+2. 로딩 스피너 표시
+3. AI 응답 수신
+4. 마크업 기반 텍스트 렌더링 출력
+
+---
+
+### 3. 기록 아카이브 (자녀 프로필 뷰)
+
+사이드바에서 자녀 프로필 선택 시 진입
+
+**상단 요약**
+- 자녀 성향 분석
+- 강점 요약
+- 종합 피드백
+
+**하단 기록 리스트**
+- 평일 기준 리스트 뷰
+- 업로드된 날짜: 기록 카드 표시
+- 업로드되지 않은 날짜: 빈 블록 + 업로드 버튼
+
+---
+
+## UX 원칙
+
+- 공지 내용을 한 줄 행동 가이드로 요약
+- 디지털 취약 계층을 고려한 직관적 UI
+- 다국어 기반 응답 구조
+- 자녀별 독립 데이터 관리
