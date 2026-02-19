@@ -1,14 +1,15 @@
 import { Outlet } from "react-router-dom";
+import Box from "@mui/material/Box";
 import Sidebar from "../common/Sidebar";
 
 const Layout = () => {
   return (
-    <div>
+    <Box sx={{ width: '100%', height: '100%', position: 'relative', backgroundColor: '#fff' }}>
       <Sidebar />
-      <main>
+      <Box component="main" sx={{ width: '100%', height: '100%' }}>
         <Outlet />
-      </main>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
