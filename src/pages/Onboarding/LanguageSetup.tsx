@@ -33,25 +33,48 @@ const LanguageSetup = ({ onNext }: Props) => {
       <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1.5 }}>
         모국어
       </Typography>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3.5 }}>
-        {LANGUAGES.map((lang) => (
-          <Button
+      <Box
+        sx={{
+          overflowY: 'auto',
+          maxHeight: 200,
+          mb: 3.5,
+          border: '1px solid #F0F0F0',
+          borderRadius: 2,
+          '&::-webkit-scrollbar': { width: 4 },
+          '&::-webkit-scrollbar-thumb': { backgroundColor: '#E0E0E0', borderRadius: 4 },
+        }}
+      >
+        {LANGUAGES.map((lang, i) => (
+          <Box
             key={lang}
-            variant={nativeLang === lang ? 'contained' : 'outlined'}
-            size="small"
             onClick={() => setNativeLang(lang)}
             sx={{
-              borderRadius: 5,
               px: 2,
-              py: 0.75,
-              fontSize: 13,
-              fontWeight: 500,
-              borderColor: nativeLang === lang ? 'primary.main' : '#E0E0E0',
-              color: nativeLang === lang ? '#fff' : '#000',
+              py: 1.25,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              backgroundColor: nativeLang === lang ? '#F0F7EE' : 'transparent',
+              borderBottom: i < LANGUAGES.length - 1 ? '1px solid #F5F5F5' : 'none',
+              '&:hover': { backgroundColor: nativeLang === lang ? '#F0F7EE' : '#FAFAFA' },
             }}
           >
-            {lang}
-          </Button>
+            <Typography variant="body2" fontWeight={nativeLang === lang ? 600 : 400}>
+              {lang}
+            </Typography>
+            {nativeLang === lang && (
+              <Box
+                sx={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  backgroundColor: 'primary.main',
+                  flexShrink: 0,
+                }}
+              />
+            )}
+          </Box>
         ))}
       </Box>
 

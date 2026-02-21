@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
@@ -7,9 +8,15 @@ import ChatBot, { type Message } from './ChatBot';
 import UploadArea from './UploadArea';
 
 // TODO: 실제 데이터로 교체
+const mockChildMap: Record<string, string> = {
+  '1': '김민준',
+  '2': '김서아',
+};
 const mockTodo = '내일 준비물: 물감, 앞치마, 개인 컵';
 
 const Main = () => {
+  const { childId } = useParams<{ childId: string }>();
+  const childName = childId ? (mockChildMap[childId] ?? '아이') : '아이';
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -57,6 +64,13 @@ const Main = () => {
 
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      {/* 상단 자녀 이름 */}
+      <Box sx={{ px: 3, pt: 2.5, pb: 0.5, pl: 7 }}>
+        <Typography variant="subtitle1" fontWeight={700}>
+          {childName}
+        </Typography>
+      </Box>
+
       {/* 상단 TODO 요약 */}
       <Paper
         elevation={0}

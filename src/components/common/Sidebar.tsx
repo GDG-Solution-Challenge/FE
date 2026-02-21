@@ -80,26 +80,42 @@ const SidebarDrawer = ({ open, onClose }: DrawerProps) => {
 
       <Box sx={{ px: 2, py: 1.5 }}>
         <Typography variant="caption" fontWeight={600} color="text.secondary" sx={{ letterSpacing: 0.5 }}>
-          자녀 기록
+          자녀
         </Typography>
       </Box>
 
       <List sx={{ px: 1 }}>
-        {mockChildren.map((child) => (
-          <ListItem key={child.id} disablePadding>
-            <ListItemButton
-              selected={location.pathname === `/records/${child.id}`}
-              onClick={() => handleNav(`/records/${child.id}`)}
-              sx={{ borderRadius: 2, mb: 0.5 }}
-            >
-              <ChildCareIcon sx={{ mr: 1.5, fontSize: 20, color: 'secondary.main' }} />
-              <ListItemText
-                primary={child.name}
-                slotProps={{ primary: { fontWeight: 500, fontSize: 14 } }}
-              />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        {mockChildren.map((child) => {
+          const isChat = location.pathname === `/child/${child.id}`;
+          const isRecord = location.pathname === `/records/${child.id}`;
+          return (
+            <ListItem key={child.id} disablePadding sx={{ flexDirection: 'column', alignItems: 'stretch', mb: 0.5 }}>
+              {/* 자녀 이름 - 클릭 시 채팅 이동 */}
+              <ListItemButton
+                selected={isChat}
+                onClick={() => handleNav(`/child/${child.id}`)}
+                sx={{ borderRadius: 2 }}
+              >
+                <ChildCareIcon sx={{ mr: 1.5, fontSize: 20, color: 'secondary.main' }} />
+                <ListItemText
+                  primary={child.name}
+                  slotProps={{ primary: { fontWeight: 500, fontSize: 14 } }}
+                />
+              </ListItemButton>
+              {/* 기록 서브메뉴 */}
+              <ListItemButton
+                selected={isRecord}
+                onClick={() => handleNav(`/records/${child.id}`)}
+                sx={{ borderRadius: 2, pl: 5.5, py: 0.5, minHeight: 0 }}
+              >
+                <ListItemText
+                  primary="기록 보기"
+                  slotProps={{ primary: { fontSize: 12, color: isRecord ? 'primary.main' : 'text.secondary' } }}
+                />
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
       </List>
     </Drawer>
   );
