@@ -1,9 +1,9 @@
 {
-  "appName": "키즈노트 도우미",
+  "appName": "마마톨미",
   "appSubtitle": "육아 가이드 AI 플랫폼",
   "onboarding": {
     "google": {
-      "title": "키즈노트 도우미",
+      "title": "마마톨미",
       "subtitle": "언어·문화 장벽이 있는 학부모를 위한\n키즈노트 요약 및 육아 가이드 플랫폼",
       "button": "Google로 시작하기"
     },
@@ -43,7 +43,7 @@
   },
   "main": {
     "placeholder": "키즈노트 내용을 입력하거나 사진을 업로드하세요",
-    "emptyChat": "키즈노트 내용을 업로드하거나\n궁금한 점을 물어보세요"
+    "emptyChat": "알림장 내용과 공지사항을 업로드 해주세요"
   },
   "records": {
     "archive": "프로필 기록 아카이브",
@@ -58,6 +58,18 @@
   "sidebar": {
     "home": "홈",
     "children": "자녀",
-    "viewRecords": "기록 보기"
+    "viewRecords": "기록 보기",
+    "settings": "설정"
+  },
+  "settings": {
+    "title": "설정",
+    "account": "계정",
+    "logout": "로그아웃",
+    "children": "자녀 관리",
+    "addChild": "자녀 추가",
+    "editChild": "자녀 정보 수정",
+    "ageUnit": "세",
+    "save": "저장",
+    "cancel": "취소"
   }
 }

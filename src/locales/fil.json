@@ -43,7 +43,7 @@
   },
   "main": {
     "placeholder": "Maglagay ng nilalaman ng KidsNote o mag-upload ng larawan",
-    "emptyChat": "Mag-upload ng nilalaman ng KidsNote o\nmagtanong ng anumang katanungan"
+    "emptyChat": "Mangyaring i-upload ang nilalaman ng\ndaily note at mga anunsyo"
   },
   "records": {
     "archive": "Profile Record Archive",
@@ -58,6 +58,18 @@
   "sidebar": {
     "home": "Home",
     "children": "Mga Bata",
-    "viewRecords": "Tingnan ang Tala"
+    "viewRecords": "Tingnan ang Tala",
+    "settings": "Mga Setting"
+  },
+  "settings": {
+    "title": "Mga Setting",
+    "account": "Account",
+    "logout": "Mag-logout",
+    "children": "Pamahalaan ang mga Bata",
+    "addChild": "Magdagdag ng Bata",
+    "editChild": "I-edit ang Impormasyon ng Bata",
+    "ageUnit": " taong gulang",
+    "save": "I-save",
+    "cancel": "Kanselahin"
   }
 }

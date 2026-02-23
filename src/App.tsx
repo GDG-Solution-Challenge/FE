@@ -4,6 +4,7 @@ import Onboarding from "./pages/Onboarding";
 import ChildSelect from "./pages/ChildSelect";
 import Main from "./pages/Main";
 import Records from "./pages/Records";
+import Settings from "./pages/Settings";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
           <Route path="/" element={<ChildSelect />} />
           <Route path="/child/:childId" element={<Main />} />
           <Route path="/records/:childId" element={<Records />} />
+          <Route path="/settings" element={<Settings />} />
         </Route>
       </Routes>
     </BrowserRouter>

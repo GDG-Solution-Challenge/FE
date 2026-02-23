@@ -43,7 +43,7 @@
   },
   "main": {
     "placeholder": "キッズノートの内容を入力するか写真をアップロードしてください",
-    "emptyChat": "キッズノートの内容をアップロードするか\n質問してください"
+    "emptyChat": "連絡帳の内容とお知らせを\nアップロードしてください"
   },
   "records": {
     "archive": "プロフィール記録アーカイブ",
@@ -58,6 +58,18 @@
   "sidebar": {
     "home": "ホーム",
     "children": "お子様",
-    "viewRecords": "記録を見る"
+    "viewRecords": "記録を見る",
+    "settings": "設定"
+  },
+  "settings": {
+    "title": "設定",
+    "account": "アカウント",
+    "logout": "ログアウト",
+    "children": "お子様管理",
+    "addChild": "お子様を追加",
+    "editChild": "お子様情報を編集",
+    "ageUnit": "歳",
+    "save": "保存",
+    "cancel": "キャンセル"
   }
 }

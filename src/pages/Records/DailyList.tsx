@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -22,8 +23,13 @@ const mockRecords: DayRecord[] = [
   { date: '02/21', dayLabel: '금', hasRecord: false },
 ];
 
-const DailyList = () => {
+interface Props {
+  childId: string;
+}
+
+const DailyList = ({ childId }: Props) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <Box sx={{ px: 2, pb: 3 }}>
@@ -43,9 +49,9 @@ const DailyList = () => {
                 <Typography variant="caption" sx={{ lineHeight: 1.6 }}>{record.summary}</Typography>
               </Box>
             ) : (
-              <Box sx={{ flex: 1, p: 1.5, borderRadius: 2, backgroundColor: '#F9F9F9', border: '1px dashed #E0E0E0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Box onClick={() => navigate(`/child/${childId}`)} sx={{ flex: 1, p: 1.5, borderRadius: 2, backgroundColor: '#F9F9F9', border: '1px dashed #E0E0E0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', '&:active': { backgroundColor: '#F0F0F0' } }}>
                 <Typography variant="caption" color="text.secondary">{t('records.noRecord')}</Typography>
-                <Button size="small" startIcon={<AddPhotoAlternateIcon sx={{ fontSize: 14 }} />} sx={{ fontSize: 11, fontWeight: 500, py: 0.25, px: 1, minWidth: 0, color: 'text.secondary' }}>
+                <Button size="small" startIcon={<AddPhotoAlternateIcon sx={{ fontSize: 14 }} />} sx={{ fontSize: 11, fontWeight: 500, py: 0.25, px: 1, minWidth: 0, color: 'text.secondary' }} onClick={(e) => e.stopPropagation()}>
                   {t('records.upload')}
                 </Button>
               </Box>

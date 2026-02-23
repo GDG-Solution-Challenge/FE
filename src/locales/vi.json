@@ -43,7 +43,7 @@
   },
   "main": {
     "placeholder": "Nhập nội dung KidsNote hoặc tải ảnh lên",
-    "emptyChat": "Tải nội dung KidsNote lên hoặc\nđặt câu hỏi bất kỳ"
+    "emptyChat": "Vui lòng tải lên nội dung\nsổ liên lạc và thông báo"
   },
   "records": {
     "archive": "Lưu trữ hồ sơ",
@@ -58,6 +58,18 @@
   "sidebar": {
     "home": "Trang chủ",
     "children": "Trẻ em",
-    "viewRecords": "Xem hồ sơ"
+    "viewRecords": "Xem hồ sơ",
+    "settings": "Cài đặt"
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "account": "Tài khoản",
+    "logout": "Đăng xuất",
+    "children": "Quản lý trẻ em",
+    "addChild": "Thêm trẻ",
+    "editChild": "Sửa thông tin trẻ",
+    "ageUnit": " tuổi",
+    "save": "Lưu",
+    "cancel": "Hủy"
   }
 }

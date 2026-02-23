@@ -43,7 +43,7 @@
   },
   "main": {
     "placeholder": "输入幼儿园通知内容或上传照片",
-    "emptyChat": "上传幼儿园通知或\n提出任何问题"
+    "emptyChat": "请上传联络簿内容和公告"
   },
   "records": {
     "archive": "档案记录",
@@ -58,6 +58,18 @@
   "sidebar": {
     "home": "首页",
     "children": "子女",
-    "viewRecords": "查看记录"
+    "viewRecords": "查看记录",
+    "settings": "设置"
+  },
+  "settings": {
+    "title": "设置",
+    "account": "账户",
+    "logout": "退出登录",
+    "children": "子女管理",
+    "addChild": "添加子女",
+    "editChild": "编辑子女信息",
+    "ageUnit": "岁",
+    "save": "保存",
+    "cancel": "取消"
   }
 }
