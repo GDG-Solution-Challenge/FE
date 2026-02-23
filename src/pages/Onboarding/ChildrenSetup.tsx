@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -20,6 +21,7 @@ interface Props {
 }
 
 const ChildrenSetup = ({ onNext }: Props) => {
+  const { t } = useTranslation();
   const [count, setCount] = useState(1);
   const [children, setChildren] = useState<Child[]>([{ name: '', gender: '', age: '' }]);
 
@@ -43,65 +45,40 @@ const ChildrenSetup = ({ onNext }: Props) => {
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', px: 3, py: 4, overflow: 'auto' }}>
       <Typography variant="h5" fontWeight={700} gutterBottom>
-        자녀 프로필 등록
+        {t('onboarding.children.title')}
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
-        미취학 자녀 정보를 입력해주세요
+        {t('onboarding.children.subtitle')}
       </Typography>
 
-      {/* 자녀 수 */}
       <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1.5 }}>
-        자녀 수
+        {t('onboarding.children.count')}
       </Typography>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3.5 }}>
-        <IconButton
-          onClick={() => updateCount(count - 1)}
-          disabled={count <= 1}
-          size="small"
-          sx={{ border: '1px solid #E0E0E0', borderRadius: 1.5 }}
-        >
+        <IconButton onClick={() => updateCount(count - 1)} disabled={count <= 1} size="small" sx={{ border: '1px solid #E0E0E0', borderRadius: 1.5 }}>
           <RemoveIcon fontSize="small" />
         </IconButton>
-        <Typography variant="h6" fontWeight={600} sx={{ minWidth: 20, textAlign: 'center' }}>
-          {count}
-        </Typography>
-        <IconButton
-          onClick={() => updateCount(count + 1)}
-          disabled={count >= 5}
-          size="small"
-          sx={{ border: '1px solid #E0E0E0', borderRadius: 1.5 }}
-        >
+        <Typography variant="h6" fontWeight={600} sx={{ minWidth: 20, textAlign: 'center' }}>{count}</Typography>
+        <IconButton onClick={() => updateCount(count + 1)} disabled={count >= 5} size="small" sx={{ border: '1px solid #E0E0E0', borderRadius: 1.5 }}>
           <AddIcon fontSize="small" />
         </IconButton>
       </Box>
 
-      {/* 자녀별 입력 */}
       {children.map((child, i) => (
-        <Box
-          key={i}
-          sx={{
-            mb: 3,
-            p: 2.5,
-            border: '1px solid #F0F0F0',
-            borderRadius: 3,
-            backgroundColor: '#FAFAFA',
-          }}
-        >
+        <Box key={i} sx={{ mb: 3, p: 2.5, border: '1px solid #F0F0F0', borderRadius: 3, backgroundColor: '#FAFAFA' }}>
           <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2, color: 'primary.main' }}>
-            {i + 1}번째 자녀
+            {t('onboarding.children.childLabel', { count: i + 1 })}
           </Typography>
 
           <TextField
-            label="이름"
+            label={t('onboarding.children.name')}
             value={child.name}
             onChange={(e) => updateChild(i, 'name', e.target.value)}
-            fullWidth
-            size="small"
-            sx={{ mb: 2 }}
+            fullWidth size="small" sx={{ mb: 2 }}
           />
 
           <Typography variant="caption" fontWeight={600} color="text.secondary" sx={{ mb: 1, display: 'block' }}>
-            성별
+            {t('onboarding.children.gender')}
           </Typography>
           <ToggleButtonGroup
             value={child.gender}
@@ -109,49 +86,31 @@ const ChildrenSetup = ({ onNext }: Props) => {
             onChange={(_, val) => val && updateChild(i, 'gender', val)}
             sx={{ mb: 2, gap: 1 }}
           >
-            {['남아', '여아'].map((g) => (
-              <ToggleButton
-                key={g}
-                value={g}
-                size="small"
-                sx={{
-                  borderRadius: '16px !important',
-                  px: 2.5,
-                  border: '1px solid #E0E0E0 !important',
-                  fontWeight: 500,
-                  fontSize: 13,
-                  '&.Mui-selected': {
-                    backgroundColor: 'primary.main',
-                    color: '#fff',
-                    '&:hover': { backgroundColor: 'primary.dark' },
-                  },
-                }}
-              >
-                {g}
+            {[
+              { value: 'boy', label: t('onboarding.children.boy') },
+              { value: 'girl', label: t('onboarding.children.girl') },
+            ].map((g) => (
+              <ToggleButton key={g.value} value={g.value} size="small" sx={{ borderRadius: '16px !important', px: 2.5, border: '1px solid #E0E0E0 !important', fontWeight: 500, fontSize: 13, '&.Mui-selected': { backgroundColor: 'primary.main', color: '#fff', '&:hover': { backgroundColor: 'primary.dark' } } }}>
+                {g.label}
               </ToggleButton>
             ))}
           </ToggleButtonGroup>
 
           <TextField
-            label="나이"
+            label={t('onboarding.children.age')}
             value={child.age}
             onChange={(e) => updateChild(i, 'age', e.target.value)}
-            fullWidth
-            size="small"
-            type="number"
+            fullWidth size="small" type="number"
             slotProps={{ htmlInput: { min: 1, max: 7 } }}
           />
         </Box>
       ))}
 
       <Button
-        variant="contained"
-        size="large"
-        disabled={!canProceed}
-        onClick={onNext}
+        variant="contained" size="large" disabled={!canProceed} onClick={onNext}
         sx={{ mt: 'auto', py: 1.5, fontWeight: 600, fontSize: 15, borderRadius: 2 }}
       >
-        시작하기
+        {t('onboarding.children.start')}
       </Button>
     </Box>
   );

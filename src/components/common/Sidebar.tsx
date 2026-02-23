@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Drawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -27,6 +28,7 @@ interface DrawerProps {
 const SidebarDrawer = ({ open, onClose }: DrawerProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
 
   const handleNav = (path: string) => {
     navigate(path);
@@ -51,10 +53,10 @@ const SidebarDrawer = ({ open, onClose }: DrawerProps) => {
     >
       <Box sx={{ px: 2.5, py: 3 }}>
         <Typography variant="h6" fontWeight={700} color="primary">
-          키즈노트 도우미
+          {t('appName')}
         </Typography>
         <Typography variant="caption" color="text.secondary">
-          육아 가이드 AI 플랫폼
+          {t('appSubtitle')}
         </Typography>
       </Box>
 
@@ -69,7 +71,7 @@ const SidebarDrawer = ({ open, onClose }: DrawerProps) => {
           >
             <HomeIcon sx={{ mr: 1.5, fontSize: 20, color: 'primary.main' }} />
             <ListItemText
-              primary="홈"
+              primary={t('sidebar.home')}
               slotProps={{ primary: { fontWeight: 500, fontSize: 14 } }}
             />
           </ListItemButton>
@@ -80,7 +82,7 @@ const SidebarDrawer = ({ open, onClose }: DrawerProps) => {
 
       <Box sx={{ px: 2, py: 1.5 }}>
         <Typography variant="caption" fontWeight={600} color="text.secondary" sx={{ letterSpacing: 0.5 }}>
-          자녀
+          {t('sidebar.children')}
         </Typography>
       </Box>
 
@@ -109,7 +111,7 @@ const SidebarDrawer = ({ open, onClose }: DrawerProps) => {
                 sx={{ borderRadius: 2, pl: 5.5, py: 0.5, minHeight: 0 }}
               >
                 <ListItemText
-                  primary="기록 보기"
+                  primary={t('sidebar.viewRecords')}
                   slotProps={{ primary: { fontSize: 12, color: isRecord ? 'primary.main' : 'text.secondary' } }}
                 />
               </ListItemButton>

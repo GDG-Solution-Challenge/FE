@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -8,24 +9,16 @@ interface Props {
 }
 
 const GoogleLogin = ({ onNext }: Props) => {
+  const { t } = useTranslation();
+
   return (
-    <Box
-      sx={{
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        px: 4,
-        gap: 3,
-      }}
-    >
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', px: 4, gap: 3 }}>
       <Box sx={{ textAlign: 'center', mb: 2 }}>
         <Typography variant="h4" fontWeight={700} color="primary" gutterBottom>
-          키즈노트 도우미
+          {t('onboarding.google.title')}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.8, whiteSpace: 'pre-line' }}>
-          {'언어·문화 장벽이 있는 학부모를 위한\n키즈노트 요약 및 육아 가이드 플랫폼'}
+          {t('onboarding.google.subtitle')}
         </Typography>
       </Box>
 
@@ -43,13 +36,10 @@ const GoogleLogin = ({ onNext }: Props) => {
           backgroundColor: '#fff',
           fontWeight: 500,
           fontSize: 15,
-          '&:hover': {
-            borderColor: '#BDBDBD',
-            backgroundColor: '#F9F9F9',
-          },
+          '&:hover': { borderColor: '#BDBDBD', backgroundColor: '#F9F9F9' },
         }}
       >
-        Google로 시작하기
+        {t('onboarding.google.button')}
       </Button>
     </Box>
   );

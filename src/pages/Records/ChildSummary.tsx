@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
@@ -14,47 +15,34 @@ const mockSummary = {
 };
 
 const ChildSummary = ({ childName }: Props) => {
+  const { t } = useTranslation();
+
   return (
     <Box sx={{ px: 2, py: 2.5 }}>
       <Typography variant="h6" fontWeight={700} gutterBottom>
-        {childName} 요약
+        {t('records.summary', { name: childName })}
       </Typography>
-
-      {/* 성향 */}
       <Box sx={{ mb: 2.5, p: 2, borderRadius: 2.5, backgroundColor: '#F0F7EE', border: '1px solid #25671E22' }}>
         <Typography variant="caption" fontWeight={600} color="primary" sx={{ display: 'block', mb: 0.75 }}>
-          성향 분석
+          {t('records.personality')}
         </Typography>
-        <Typography variant="body2" sx={{ lineHeight: 1.7 }}>
-          {mockSummary.personality}
-        </Typography>
+        <Typography variant="body2" sx={{ lineHeight: 1.7 }}>{mockSummary.personality}</Typography>
       </Box>
-
-      {/* 강점 */}
       <Box sx={{ mb: 2.5 }}>
         <Typography variant="caption" fontWeight={600} color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-          강점
+          {t('records.strengths')}
         </Typography>
         <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
           {mockSummary.strengths.map((s) => (
-            <Chip
-              key={s}
-              label={s}
-              size="small"
-              sx={{ backgroundColor: 'secondary.main', color: '#fff', fontWeight: 500 }}
-            />
+            <Chip key={s} label={s} size="small" sx={{ backgroundColor: 'secondary.main', color: '#fff', fontWeight: 500 }} />
           ))}
         </Box>
       </Box>
-
-      {/* 종합 피드백 */}
       <Box sx={{ p: 2, borderRadius: 2.5, backgroundColor: '#F7F7F7' }}>
         <Typography variant="caption" fontWeight={600} color="text.secondary" sx={{ display: 'block', mb: 0.75 }}>
-          종합 피드백
+          {t('records.feedback')}
         </Typography>
-        <Typography variant="body2" sx={{ lineHeight: 1.7 }}>
-          {mockSummary.feedback}
-        </Typography>
+        <Typography variant="body2" sx={{ lineHeight: 1.7 }}>{mockSummary.feedback}</Typography>
       </Box>
     </Box>
   );
