@@ -1,0 +1,63 @@
+{
+  "appName": "Trợ lý KidsNote",
+  "appSubtitle": "Nền tảng hướng dẫn nuôi dạy con bằng AI",
+  "onboarding": {
+    "google": {
+      "title": "Trợ lý KidsNote",
+      "subtitle": "Nền tảng tóm tắt KidsNote và hướng dẫn nuôi dạy con\ncho phụ huynh có rào cản ngôn ngữ",
+      "button": "Bắt đầu với Google"
+    },
+    "language": {
+      "title": "Cài đặt ngôn ngữ",
+      "subtitle": "Chúng tôi sẽ hỗ trợ bạn bằng ngôn ngữ ưa thích",
+      "nativeLang": "Tiếng mẹ đẻ",
+      "koreanLevel": "Trình độ tiếng Hàn",
+      "levelHigh": "Cao",
+      "levelMid": "Trung bình",
+      "levelLow": "Thấp",
+      "responseLang": "Ngôn ngữ phản hồi AI",
+      "responseNative": "Tiếng mẹ đẻ",
+      "responseBoth": "Tiếng mẹ đẻ + Tiếng Hàn",
+      "responseKorean": "Tiếng Hàn",
+      "next": "Tiếp theo"
+    },
+    "children": {
+      "title": "Đăng ký hồ sơ trẻ em",
+      "subtitle": "Vui lòng nhập thông tin trẻ mầm non",
+      "count": "Số lượng con",
+      "childLabel": "Con thứ {{count}}",
+      "name": "Tên",
+      "gender": "Giới tính",
+      "boy": "Bé trai",
+      "girl": "Bé gái",
+      "age": "Tuổi",
+      "start": "Bắt đầu"
+    }
+  },
+  "childSelect": {
+    "title": "Bạn muốn xem ghi chú",
+    "titleHighlight": "của bé nào?",
+    "subtitle": "Chọn trẻ để đến màn hình trò chuyện của bé",
+    "boy": "Bé trai",
+    "girl": "Bé gái"
+  },
+  "main": {
+    "placeholder": "Nhập nội dung KidsNote hoặc tải ảnh lên",
+    "emptyChat": "Tải nội dung KidsNote lên hoặc\nđặt câu hỏi bất kỳ"
+  },
+  "records": {
+    "archive": "Lưu trữ hồ sơ",
+    "summary": "Tóm tắt của {{name}}",
+    "personality": "Phân tích tính cách",
+    "strengths": "Điểm mạnh",
+    "feedback": "Phản hồi tổng thể",
+    "weeklyRecords": "Hồ sơ tuần này",
+    "noRecord": "Không có hồ sơ",
+    "upload": "Tải lên"
+  },
+  "sidebar": {
+    "home": "Trang chủ",
+    "children": "Trẻ em",
+    "viewRecords": "Xem hồ sơ"
+  }
+}

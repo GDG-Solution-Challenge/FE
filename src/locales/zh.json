@@ -1,0 +1,63 @@
+{
+  "appName": "幼儿园通知助手",
+  "appSubtitle": "AI育儿指导平台",
+  "onboarding": {
+    "google": {
+      "title": "幼儿园通知助手",
+      "subtitle": "为有语言文化障碍的家长提供\n幼儿园通知摘要和育儿指导的平台",
+      "button": "使用Google登录"
+    },
+    "language": {
+      "title": "语言设置",
+      "subtitle": "我们将用您熟悉的语言为您提供帮助",
+      "nativeLang": "母语",
+      "koreanLevel": "韩语水平",
+      "levelHigh": "高",
+      "levelMid": "中",
+      "levelLow": "低",
+      "responseLang": "AI回复语言",
+      "responseNative": "母语",
+      "responseBoth": "母语 + 韩语",
+      "responseKorean": "韩语",
+      "next": "下一步"
+    },
+    "children": {
+      "title": "子女档案注册",
+      "subtitle": "请输入学龄前子女的信息",
+      "count": "子女人数",
+      "childLabel": "第{{count}}个孩子",
+      "name": "姓名",
+      "gender": "性别",
+      "boy": "男孩",
+      "girl": "女孩",
+      "age": "年龄",
+      "start": "开始使用"
+    }
+  },
+  "childSelect": {
+    "title": "您想查看哪个孩子",
+    "titleHighlight": "的通知呢？",
+    "subtitle": "选择孩子即可进入对应的聊天界面",
+    "boy": "男孩",
+    "girl": "女孩"
+  },
+  "main": {
+    "placeholder": "输入幼儿园通知内容或上传照片",
+    "emptyChat": "上传幼儿园通知或\n提出任何问题"
+  },
+  "records": {
+    "archive": "档案记录",
+    "summary": "{{name}}的摘要",
+    "personality": "性格分析",
+    "strengths": "优势",
+    "feedback": "综合反馈",
+    "weeklyRecords": "本周记录",
+    "noRecord": "无记录",
+    "upload": "上传"
+  },
+  "sidebar": {
+    "home": "首页",
+    "children": "子女",
+    "viewRecords": "查看记录"
+  }
+}
