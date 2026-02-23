@@ -43,7 +43,7 @@
   },
   "main": {
     "placeholder": "Enter KidsNote content or upload a photo",
-    "emptyChat": "Upload KidsNote content or\nask any questions"
+    "emptyChat": "Please upload the daily note\nand announcements"
   },
   "records": {
     "archive": "Profile Record Archive",
@@ -58,6 +58,18 @@
   "sidebar": {
     "home": "Home",
     "children": "Children",
-    "viewRecords": "View Records"
+    "viewRecords": "View Records",
+    "settings": "Settings"
+  },
+  "settings": {
+    "title": "Settings",
+    "account": "Account",
+    "logout": "Log out",
+    "children": "Manage Children",
+    "addChild": "Add Child",
+    "editChild": "Edit Child",
+    "ageUnit": " yrs",
+    "save": "Save",
+    "cancel": "Cancel"
   }
 }
