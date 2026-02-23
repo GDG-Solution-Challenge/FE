@@ -25,7 +25,7 @@ const Records = () => {
       </Box>
       <ChildSummary childName={childName} />
       <Divider sx={{ mx: 2, borderColor: '#F0F0F0' }} />
-      <DailyList />
+      <DailyList childId={childId ?? ''} />
     </Box>
   );
 };
