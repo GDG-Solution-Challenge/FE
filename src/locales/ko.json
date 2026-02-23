@@ -1,0 +1,63 @@
+{
+  "appName": "키즈노트 도우미",
+  "appSubtitle": "육아 가이드 AI 플랫폼",
+  "onboarding": {
+    "google": {
+      "title": "키즈노트 도우미",
+      "subtitle": "언어·문화 장벽이 있는 학부모를 위한\n키즈노트 요약 및 육아 가이드 플랫폼",
+      "button": "Google로 시작하기"
+    },
+    "language": {
+      "title": "언어 설정",
+      "subtitle": "편한 언어로 도움을 드릴게요",
+      "nativeLang": "모국어",
+      "koreanLevel": "한국어 실력",
+      "levelHigh": "상",
+      "levelMid": "중",
+      "levelLow": "하",
+      "responseLang": "AI 응답 언어",
+      "responseNative": "모국어",
+      "responseBoth": "모국어 + 한국어",
+      "responseKorean": "한국어",
+      "next": "다음"
+    },
+    "children": {
+      "title": "자녀 프로필 등록",
+      "subtitle": "미취학 자녀 정보를 입력해주세요",
+      "count": "자녀 수",
+      "childLabel": "{{count}}번째 자녀",
+      "name": "이름",
+      "gender": "성별",
+      "boy": "남아",
+      "girl": "여아",
+      "age": "나이",
+      "start": "시작하기"
+    }
+  },
+  "childSelect": {
+    "title": "어떤 아이의 노트를",
+    "titleHighlight": "확인할까요?",
+    "subtitle": "자녀를 선택하면 해당 아이의 채팅 화면으로 이동합니다",
+    "boy": "남아",
+    "girl": "여아"
+  },
+  "main": {
+    "placeholder": "키즈노트 내용을 입력하거나 사진을 업로드하세요",
+    "emptyChat": "키즈노트 내용을 업로드하거나\n궁금한 점을 물어보세요"
+  },
+  "records": {
+    "archive": "프로필 기록 아카이브",
+    "summary": "{{name}} 요약",
+    "personality": "성향 분석",
+    "strengths": "강점",
+    "feedback": "종합 피드백",
+    "weeklyRecords": "이번 주 기록",
+    "noRecord": "기록 없음",
+    "upload": "업로드"
+  },
+  "sidebar": {
+    "home": "홈",
+    "children": "자녀",
+    "viewRecords": "기록 보기"
+  }
+}

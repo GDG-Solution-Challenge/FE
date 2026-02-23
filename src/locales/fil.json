@@ -1,0 +1,63 @@
+{
+  "appName": "KidsNote Helper",
+  "appSubtitle": "AI Parenting Guide Platform",
+  "onboarding": {
+    "google": {
+      "title": "KidsNote Helper",
+      "subtitle": "Platform para sa pagbubuod ng KidsNote at patnubay\nsa pagpapalaki ng bata para sa mga magulang",
+      "button": "Magsimula sa Google"
+    },
+    "language": {
+      "title": "Mga Setting ng Wika",
+      "subtitle": "Tutulungan ka namin sa iyong kagustuhang wika",
+      "nativeLang": "Katutubong Wika",
+      "koreanLevel": "Antas ng Korean",
+      "levelHigh": "Mataas",
+      "levelMid": "Katamtaman",
+      "levelLow": "Mababa",
+      "responseLang": "Wika ng Tugon ng AI",
+      "responseNative": "Katutubong Wika",
+      "responseBoth": "Katutubong Wika + Korean",
+      "responseKorean": "Korean",
+      "next": "Susunod"
+    },
+    "children": {
+      "title": "Pagpaparehistro ng Profile ng Bata",
+      "subtitle": "Mangyaring ilagay ang impormasyon ng iyong batang pang-preschool",
+      "count": "Bilang ng mga Anak",
+      "childLabel": "Ika-{{count}} na Anak",
+      "name": "Pangalan",
+      "gender": "Kasarian",
+      "boy": "Lalaki",
+      "girl": "Babae",
+      "age": "Edad",
+      "start": "Magsimula"
+    }
+  },
+  "childSelect": {
+    "title": "Anong tala ng bata ang",
+    "titleHighlight": "gusto mong tingnan?",
+    "subtitle": "Piliin ang isang bata para pumunta sa kanyang chat screen",
+    "boy": "Lalaki",
+    "girl": "Babae"
+  },
+  "main": {
+    "placeholder": "Maglagay ng nilalaman ng KidsNote o mag-upload ng larawan",
+    "emptyChat": "Mag-upload ng nilalaman ng KidsNote o\nmagtanong ng anumang katanungan"
+  },
+  "records": {
+    "archive": "Profile Record Archive",
+    "summary": "Buod ni {{name}}",
+    "personality": "Pagsusuri ng Personalidad",
+    "strengths": "Mga Kalakasan",
+    "feedback": "Pangkalahatang Feedback",
+    "weeklyRecords": "Mga Tala Ngayong Linggo",
+    "noRecord": "Walang tala",
+    "upload": "I-upload"
+  },
+  "sidebar": {
+    "home": "Home",
+    "children": "Mga Bata",
+    "viewRecords": "Tingnan ang Tala"
+  }
+}

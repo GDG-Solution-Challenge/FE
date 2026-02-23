@@ -1,0 +1,63 @@
+{
+  "appName": "キッズノート助手",
+  "appSubtitle": "AI育児ガイドプラットフォーム",
+  "onboarding": {
+    "google": {
+      "title": "キッズノート助手",
+      "subtitle": "言語・文化の壁がある保護者のための\nキッズノート要約・育児ガイドプラットフォーム",
+      "button": "Googleで始める"
+    },
+    "language": {
+      "title": "言語設定",
+      "subtitle": "ご希望の言語でサポートします",
+      "nativeLang": "母国語",
+      "koreanLevel": "韓国語レベル",
+      "levelHigh": "上級",
+      "levelMid": "中級",
+      "levelLow": "初級",
+      "responseLang": "AI回答言語",
+      "responseNative": "母国語",
+      "responseBoth": "母国語 + 韓国語",
+      "responseKorean": "韓国語",
+      "next": "次へ"
+    },
+    "children": {
+      "title": "お子様プロフィール登録",
+      "subtitle": "未就学のお子様の情報を入力してください",
+      "count": "お子様の人数",
+      "childLabel": "{{count}}人目のお子様",
+      "name": "名前",
+      "gender": "性別",
+      "boy": "男の子",
+      "girl": "女の子",
+      "age": "年齢",
+      "start": "始める"
+    }
+  },
+  "childSelect": {
+    "title": "どのお子様のノートを",
+    "titleHighlight": "確認しますか？",
+    "subtitle": "お子様を選択するとチャット画面に移動します",
+    "boy": "男の子",
+    "girl": "女の子"
+  },
+  "main": {
+    "placeholder": "キッズノートの内容を入力するか写真をアップロードしてください",
+    "emptyChat": "キッズノートの内容をアップロードするか\n質問してください"
+  },
+  "records": {
+    "archive": "プロフィール記録アーカイブ",
+    "summary": "{{name}}のまとめ",
+    "personality": "性格分析",
+    "strengths": "強み",
+    "feedback": "総合フィードバック",
+    "weeklyRecords": "今週の記録",
+    "noRecord": "記録なし",
+    "upload": "アップロード"
+  },
+  "sidebar": {
+    "home": "ホーム",
+    "children": "お子様",
+    "viewRecords": "記録を見る"
+  }
+}

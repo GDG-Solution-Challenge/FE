@@ -1,0 +1,63 @@
+{
+  "appName": "KidsNote Helper",
+  "appSubtitle": "AI Parenting Guide Platform",
+  "onboarding": {
+    "google": {
+      "title": "KidsNote Helper",
+      "subtitle": "KidsNote summary & parenting guide platform\nfor parents with language barriers",
+      "button": "Start with Google"
+    },
+    "language": {
+      "title": "Language Settings",
+      "subtitle": "We'll help you in your preferred language",
+      "nativeLang": "Native Language",
+      "koreanLevel": "Korean Proficiency",
+      "levelHigh": "High",
+      "levelMid": "Mid",
+      "levelLow": "Low",
+      "responseLang": "AI Response Language",
+      "responseNative": "Native Language",
+      "responseBoth": "Native + Korean",
+      "responseKorean": "Korean",
+      "next": "Next"
+    },
+    "children": {
+      "title": "Child Profile Setup",
+      "subtitle": "Please enter your preschool child's information",
+      "count": "Number of Children",
+      "childLabel": "Child {{count}}",
+      "name": "Name",
+      "gender": "Gender",
+      "boy": "Boy",
+      "girl": "Girl",
+      "age": "Age",
+      "start": "Get Started"
+    }
+  },
+  "childSelect": {
+    "title": "Which child's note would",
+    "titleHighlight": "you like to check?",
+    "subtitle": "Select a child to go to their chat screen",
+    "boy": "Boy",
+    "girl": "Girl"
+  },
+  "main": {
+    "placeholder": "Enter KidsNote content or upload a photo",
+    "emptyChat": "Upload KidsNote content or\nask any questions"
+  },
+  "records": {
+    "archive": "Profile Record Archive",
+    "summary": "{{name}}'s Summary",
+    "personality": "Personality Analysis",
+    "strengths": "Strengths",
+    "feedback": "Overall Feedback",
+    "weeklyRecords": "This Week's Records",
+    "noRecord": "No record",
+    "upload": "Upload"
+  },
+  "sidebar": {
+    "home": "Home",
+    "children": "Children",
+    "viewRecords": "View Records"
+  }
+}
