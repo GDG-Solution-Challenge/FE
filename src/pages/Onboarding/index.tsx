@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import GoogleLogin from './GoogleLogin';
@@ -8,6 +9,7 @@ import ChildrenSetup from './ChildrenSetup';
 const STEPS = ['login', 'language', 'children'] as const;
 
 const Onboarding = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState<(typeof STEPS)[number]>('login');
 
   const progress = ((STEPS.indexOf(step) + 1) / STEPS.length) * 100;
@@ -24,7 +26,7 @@ const Onboarding = () => {
       <Box sx={{ flex: 1, overflow: 'auto' }}>
         {step === 'login' && <GoogleLogin onNext={() => setStep('language')} />}
         {step === 'language' && <LanguageSetup onNext={() => setStep('children')} />}
-        {step === 'children' && <ChildrenSetup onNext={() => {/* TODO: navigate to main */}} />}
+        {step === 'children' && <ChildrenSetup onNext={() => navigate('/')} />}
       </Box>
     </Box>
   );
