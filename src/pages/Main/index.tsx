@@ -7,6 +7,8 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import ChatBot, { type Message } from './ChatBot';
 import UploadArea from './UploadArea';
 import imgAlimjang from '../../assets/image.png';
+import axios from 'axios';
+import { uploadKidsNote } from '../../api/kidsNote';
 
 // TODO: 실제 데이터로 교체
 const mockChildMap: Record<string, string> = {
@@ -89,8 +91,8 @@ const Main = () => {
     }, 1500);
   };
 
-  const handleImageUpload = (file: File) => {
-    // TODO: 실제 이미지 업로드 처리
+  const handleImageUpload = async (file: File) => {
+    if (!childId || loading) return;
     const imageUrl = URL.createObjectURL(file);
     setMessages((prev) => [
       ...prev,
@@ -98,14 +100,26 @@ const Main = () => {
       { role: 'assistant', content: '', isLoading: true },
     ]);
     setLoading(true);
-    setTimeout(() => {
+
+    try {
+      const res = await uploadKidsNote(Number(childId), file);
+      if (!res.isSuccess) throw new Error(res.message);
+      // TODO: noteId(res.result)로 분석 결과 조회 API 연동
       setMessages((prev) =>
         prev.map((m, i) =>
-          i === prev.length - 1 ? { role: 'assistant', content: '사진을 분석했어요. 내일 준비물은 물감, 앞치마입니다.' } : m
+          i === prev.length - 1 ? { role: 'assistant', content: res.message } : m
         )
       );
+    } catch (e) {
+      const msg = axios.isAxiosError(e) ? (e.response?.data?.message ?? e.message) : '업로드 중 오류가 발생했어요.';
+      setMessages((prev) =>
+        prev.map((m, i) =>
+          i === prev.length - 1 ? { role: 'assistant', content: msg } : m
+        )
+      );
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   return (
