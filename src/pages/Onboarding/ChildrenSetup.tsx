@@ -7,13 +7,16 @@ import TextField from '@mui/material/TextField';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import IconButton from '@mui/material/IconButton';
+import CircularProgress from '@mui/material/CircularProgress';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import { createKid } from '../../api/kid';
+import { authStore } from '../../store/auth';
 
 interface Child {
   name: string;
   gender: string;
-  age: string;
+  birthDate: string;
 }
 
 interface Props {
@@ -23,14 +26,15 @@ interface Props {
 const ChildrenSetup = ({ onNext }: Props) => {
   const { t } = useTranslation();
   const [count, setCount] = useState(1);
-  const [children, setChildren] = useState<Child[]>([{ name: '', gender: '', age: '' }]);
+  const [children, setChildren] = useState<Child[]>([{ name: '', gender: '', birthDate: '' }]);
+  const [loading, setLoading] = useState(false);
 
   const updateCount = (next: number) => {
     if (next < 1 || next > 5) return;
     setCount(next);
     setChildren((prev) => {
       if (next > prev.length) {
-        return [...prev, ...Array(next - prev.length).fill({ name: '', gender: '', age: '' })];
+        return [...prev, ...Array(next - prev.length).fill({ name: '', gender: '', birthDate: '' })];
       }
       return prev.slice(0, next);
     });
@@ -40,10 +44,33 @@ const ChildrenSetup = ({ onNext }: Props) => {
     setChildren((prev) => prev.map((c, idx) => (idx === i ? { ...c, [field]: value } : c)));
   };
 
-  const canProceed = children.every((c) => c.name && c.gender && c.age);
+  const canProceed = children.every((c) => c.name && c.gender && c.birthDate);
+
+  const handleNext = async () => {
+    const userId = authStore.getUserId();
+    if (!userId) return;
+    setLoading(true);
+    try {
+      await Promise.all(
+        children.map((child) =>
+          createKid(userId, {
+            name: child.name,
+            gender: child.gender === 'boy' ? 'MALE' : 'FEMALE',
+            birthDate: child.birthDate,
+          })
+        )
+      );
+      onNext();
+    } catch {
+      // 실패해도 다음 단계로 진행
+      onNext();
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', px: 3, py: 4, overflow: 'auto' }}>
+    <Box sx={{ minHeight: '100%', display: 'flex', flexDirection: 'column', px: 3, py: 4 }}>
       <Typography variant="h5" fontWeight={700} gutterBottom>
         {t('onboarding.children.title')}
       </Typography>
@@ -84,7 +111,7 @@ const ChildrenSetup = ({ onNext }: Props) => {
             value={child.gender}
             exclusive
             onChange={(_, val) => val && updateChild(i, 'gender', val)}
-            sx={{ mb: 2, gap: 1 }}
+            sx={{ mb: 2, gap: 1, flexWrap: 'wrap' }}
           >
             {[
               { value: 'boy', label: t('onboarding.children.boy') },
@@ -97,20 +124,20 @@ const ChildrenSetup = ({ onNext }: Props) => {
           </ToggleButtonGroup>
 
           <TextField
-            label={t('onboarding.children.age')}
-            value={child.age}
-            onChange={(e) => updateChild(i, 'age', e.target.value)}
-            fullWidth size="small" type="number"
-            slotProps={{ htmlInput: { min: 1, max: 7 } }}
+            label={t('onboarding.children.birthDate')}
+            value={child.birthDate}
+            onChange={(e) => updateChild(i, 'birthDate', e.target.value)}
+            fullWidth size="small" type="date"
+            slotProps={{ inputLabel: { shrink: true } }}
           />
         </Box>
       ))}
 
       <Button
-        variant="contained" size="large" disabled={!canProceed} onClick={onNext}
-        sx={{ mt: 'auto', py: 1.5, fontWeight: 600, fontSize: 15, borderRadius: 2 }}
+        variant="contained" size="large" disabled={!canProceed || loading} onClick={handleNext}
+        sx={{ mt: 3, mb: 2, py: 1.5, fontWeight: 600, fontSize: 15, borderRadius: 2, position: 'sticky', bottom: 16, zIndex: 1 }}
       >
-        {t('onboarding.children.start')}
+        {loading ? <CircularProgress size={22} sx={{ color: '#fff' }} /> : t('onboarding.children.start')}
       </Button>
     </Box>
   );
