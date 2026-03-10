@@ -6,6 +6,9 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import CircularProgress from '@mui/material/CircularProgress';
+import { patchOnboarding } from '../../api/user';
+import { authStore } from '../../store/auth';
 
 const LANGUAGES = [
   { code: 'ko', label: '한국어' },
@@ -13,8 +16,10 @@ const LANGUAGES = [
   { code: 'zh', label: '中文' },
   { code: 'ja', label: '日本語' },
   { code: 'vi', label: 'Tiếng Việt' },
-  { code: 'fil', label: 'Filipino' },
 ];
+
+const KO_LEVEL_MAP = { high: 'HIGH', mid: 'MID', low: 'LOW' } as const;
+const RESPONSE_LANG_MAP = { native: 'NATIVE', both: 'BOTH', korean: 'KOREAN' } as const;
 
 interface Props {
   onNext: () => void;
@@ -25,12 +30,32 @@ const LanguageSetup = ({ onNext }: Props) => {
   const [nativeLang, setNativeLang] = useState('');
   const [koLevel, setKoLevel] = useState('');
   const [responseLang, setResponseLang] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const canProceed = nativeLang && koLevel && responseLang;
 
   const handleLangSelect = (code: string) => {
     setNativeLang(code);
     i18n.changeLanguage(code);
+  };
+
+  const handleNext = async () => {
+    const userId = authStore.getUserId();
+    if (!userId) return;
+    setLoading(true);
+    try {
+      await patchOnboarding({
+        userId,
+        koreanLevel: KO_LEVEL_MAP[koLevel as keyof typeof KO_LEVEL_MAP],
+        responseLanguage: RESPONSE_LANG_MAP[responseLang as keyof typeof RESPONSE_LANG_MAP],
+      });
+      onNext();
+    } catch {
+      // 실패해도 다음 단계로 진행
+      onNext();
+    } finally {
+      setLoading(false);
+    }
   };
 
   const KO_LEVELS = [
@@ -46,7 +71,7 @@ const LanguageSetup = ({ onNext }: Props) => {
   ];
 
   return (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', px: 3, py: 4, overflow: 'auto' }}>
+    <Box sx={{ minHeight: '100%', display: 'flex', flexDirection: 'column', px: 3, py: 4 }}>
       <Typography variant="h5" fontWeight={700} gutterBottom>
         {t('onboarding.language.title')}
       </Typography>
@@ -61,7 +86,7 @@ const LanguageSetup = ({ onNext }: Props) => {
       <Box
         sx={{
           overflowY: 'auto',
-          maxHeight: 200,
+          maxHeight: '30vh',
           mb: 3.5,
           border: '1px solid #F0F0F0',
           borderRadius: 2,
@@ -103,7 +128,7 @@ const LanguageSetup = ({ onNext }: Props) => {
         value={koLevel}
         exclusive
         onChange={(_, val) => val && setKoLevel(val)}
-        sx={{ mb: 3.5, gap: 1 }}
+        sx={{ mb: 3.5, gap: 1, flexWrap: 'wrap' }}
       >
         {KO_LEVELS.map((level) => (
           <ToggleButton
@@ -148,7 +173,7 @@ const LanguageSetup = ({ onNext }: Props) => {
               color: responseLang === lang.value ? '#fff' : '#000',
             }}
           >
-            {lang.label}
+            {lang.value === responseLang ? lang.label : lang.label}
           </Button>
         ))}
       </Box>
@@ -156,11 +181,11 @@ const LanguageSetup = ({ onNext }: Props) => {
       <Button
         variant="contained"
         size="large"
-        disabled={!canProceed}
-        onClick={onNext}
-        sx={{ mt: 'auto', py: 1.5, fontWeight: 600, fontSize: 15, borderRadius: 2 }}
+        disabled={!canProceed || loading}
+        onClick={handleNext}
+        sx={{ mt: 3, mb: 2, py: 1.5, fontWeight: 600, fontSize: 15, borderRadius: 2, position: 'sticky', bottom: 16, zIndex: 1 }}
       >
-        {t('onboarding.language.next')}
+        {loading ? <CircularProgress size={22} sx={{ color: '#fff' }} /> : t('onboarding.language.next')}
       </Button>
     </Box>
   );
