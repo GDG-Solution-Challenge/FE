@@ -24,7 +24,7 @@ const Onboarding = () => {
         />
       )}
       <Box sx={{ flex: 1, overflow: 'auto' }}>
-        {step === 'login' && <GoogleLogin onNext={() => setStep('language')} />}
+        {step === 'login' && <GoogleLogin />}
         {step === 'language' && <LanguageSetup onNext={() => setStep('children')} />}
         {step === 'children' && <ChildrenSetup onNext={() => navigate('/')} />}
       </Box>
