@@ -7,6 +7,10 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import ChatBot, { type Message } from './ChatBot';
 import UploadArea from './UploadArea';
 import imgAlimjang from '../../assets/image.png';
+import axios from 'axios';
+import { uploadKidsNote } from '../../api/kidsNote';
+import { createChatRoom, sendMessage } from '../../api/chat';
+import { authStore } from '../../store/auth';
 
 // TODO: 실제 데이터로 교체
 const mockChildMap: Record<string, string> = {
@@ -65,32 +69,40 @@ const Main = () => {
   );
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [roomId, setRoomId] = useState<number | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = () => {
-    if (!input.trim() || loading) return;
+  const resolveLastAssistant = (content: string) => {
+    setMessages((prev) =>
+      prev.map((m, i) => (i === prev.length - 1 ? { role: 'assistant' as const, content } : m))
+    );
+  };
+
+  const handleSend = async () => {
+    if (!input.trim() || loading || !roomId) return;
     const userMsg: Message = { role: 'user', content: input.trim() };
     setMessages((prev) => [...prev, userMsg, { role: 'assistant', content: '', isLoading: true }]);
     setInput('');
     setLoading(true);
 
-    // TODO: 실제 API 연동
-    setTimeout(() => {
-      setMessages((prev) =>
-        prev.map((m, i) =>
-          i === prev.length - 1 ? { role: 'assistant', content: '안녕하세요! 키즈노트 내용을 분석해드릴게요.' } : m
-        )
-      );
+    try {
+      const res = await sendMessage(roomId, userMsg.content);
+      resolveLastAssistant(res.result.response);
+    } catch (e) {
+      const msg = axios.isAxiosError(e) ? (e.response?.data?.message ?? e.message) : '오류가 발생했어요.';
+      resolveLastAssistant(msg);
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
-  const handleImageUpload = (file: File) => {
-    // TODO: 실제 이미지 업로드 처리
+  const handleImageUpload = async (file: File) => {
+    if (!childId || loading) return;
+    const userId = authStore.getUserId();
     const imageUrl = URL.createObjectURL(file);
     setMessages((prev) => [
       ...prev,
@@ -98,14 +110,27 @@ const Main = () => {
       { role: 'assistant', content: '', isLoading: true },
     ]);
     setLoading(true);
-    setTimeout(() => {
-      setMessages((prev) =>
-        prev.map((m, i) =>
-          i === prev.length - 1 ? { role: 'assistant', content: '사진을 분석했어요. 내일 준비물은 물감, 앞치마입니다.' } : m
-        )
-      );
+
+    try {
+      // 1. 키즈노트 이미지 업로드 → kidsNoteId
+      const noteRes = await uploadKidsNote(Number(childId), file);
+      if (!noteRes.isSuccess) throw new Error(noteRes.message);
+
+      // 2. 채팅방 생성 → roomId
+      const roomRes = await createChatRoom(userId ?? 1, noteRes.result);
+      if (!roomRes.isSuccess) throw new Error(roomRes.message);
+      const newRoomId = roomRes.result.chatRoomId;
+      setRoomId(newRoomId);
+
+      // 3. AI 첫 분석 메시지
+      const aiRes = await sendMessage(newRoomId, '키즈노트를 분석해줘');
+      resolveLastAssistant(aiRes.result.response);
+    } catch (e) {
+      const msg = axios.isAxiosError(e) ? (e.response?.data?.message ?? e.message) : '업로드 중 오류가 발생했어요.';
+      resolveLastAssistant(msg);
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   return (

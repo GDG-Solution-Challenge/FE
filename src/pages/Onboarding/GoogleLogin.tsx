@@ -4,12 +4,15 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import GoogleIcon from '@mui/icons-material/Google';
 
-interface Props {
-  onNext: () => void;
-}
+// TODO: 백엔드 팀에 실제 Google OAuth 시작 URL 확인 필요
+const GOOGLE_OAUTH_URL = 'https://mamatolmi-server-163838471205.asia-northeast3.run.app/oauth2/authorization/google';
 
-const GoogleLogin = ({ onNext }: Props) => {
+const GoogleLogin = () => {
   const { t } = useTranslation();
+
+  const handleLogin = () => {
+    window.location.href = GOOGLE_OAUTH_URL;
+  };
 
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', px: 4, gap: 3 }}>
@@ -26,7 +29,7 @@ const GoogleLogin = ({ onNext }: Props) => {
         variant="outlined"
         size="large"
         startIcon={<GoogleIcon />}
-        onClick={onNext}
+        onClick={handleLogin}
         sx={{
           width: '100%',
           maxWidth: 320,

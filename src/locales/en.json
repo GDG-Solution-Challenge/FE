@@ -30,7 +30,7 @@
       "gender": "Gender",
       "boy": "Boy",
       "girl": "Girl",
-      "age": "Age",
+      "birthDate": "Date of Birth",
       "start": "Get Started"
     }
   },

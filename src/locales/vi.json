@@ -30,7 +30,7 @@
       "gender": "Giới tính",
       "boy": "Bé trai",
       "girl": "Bé gái",
-      "age": "Tuổi",
+      "birthDate": "Ngày sinh",
       "start": "Bắt đầu"
     }
   },
