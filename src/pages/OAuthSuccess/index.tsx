@@ -3,6 +3,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import { authStore } from '../../store/auth';
+import { getUser } from '../../api/user';
+import { getChatRooms } from '../../api/chat';
 
 const OAuthSuccess = () => {
   const [searchParams] = useSearchParams();
@@ -16,7 +18,36 @@ const OAuthSuccess = () => {
     }
 
     authStore.setToken(token);
-    navigate('/', { replace: true });
+    const userId = authStore.getUserId();
+
+    if (!userId) {
+      navigate('/onboarding', { replace: true });
+      return;
+    }
+
+    const checkSetup = async () => {
+      try {
+        const user = await getUser(userId);
+
+        if (!user.koreanLevel) {
+          navigate('/onboarding', { replace: true, state: { step: 'language' } });
+          return;
+        }
+
+        const chatData = await getChatRooms(userId);
+        const firstChild = chatData.result?.childChatGroups?.[0];
+
+        if (firstChild) {
+          navigate(`/child/${firstChild.childId}`, { replace: true });
+        } else {
+          navigate('/onboarding', { replace: true, state: { step: 'language' } });
+        }
+      } catch {
+        navigate('/onboarding', { replace: true, state: { step: 'language' } });
+      }
+    };
+
+    checkSetup();
   }, []);
 
   return (
