@@ -4,14 +4,14 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import GoogleIcon from '@mui/icons-material/Google';
 
-// TODO: 백엔드 팀에 실제 Google OAuth 시작 URL 확인 필요
 const GOOGLE_OAUTH_URL = 'https://mamatolmi-server-163838471205.asia-northeast3.run.app/oauth2/authorization/google';
 
 const GoogleLogin = () => {
   const { t } = useTranslation();
 
   const handleLogin = () => {
-    window.location.href = GOOGLE_OAUTH_URL;
+    const redirectUri = `${window.location.origin}/oauth-success`;
+    window.location.href = `${GOOGLE_OAUTH_URL}?state=${encodeURIComponent(redirectUri)}`;
   };
 
   return (
