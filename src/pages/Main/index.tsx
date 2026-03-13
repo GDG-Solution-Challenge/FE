@@ -2,8 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import ChatBot, { type Message } from './ChatBot';
 import UploadArea from './UploadArea';
 import axios from 'axios';
