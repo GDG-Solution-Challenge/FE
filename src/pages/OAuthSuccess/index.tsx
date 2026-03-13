@@ -40,7 +40,8 @@ const OAuthSuccess = () => {
         if (firstChild) {
           navigate(`/child/${firstChild.childId}`, { replace: true });
         } else {
-          navigate('/onboarding', { replace: true, state: { step: 'language' } });
+          // koreanLevel은 있지만 아이가 없으면 아이 등록 단계로
+          navigate('/onboarding', { replace: true, state: { step: 'children' } });
         }
       } catch {
         navigate('/onboarding', { replace: true, state: { step: 'language' } });

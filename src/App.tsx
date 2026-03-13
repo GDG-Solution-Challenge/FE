@@ -32,10 +32,13 @@ const RootRedirect = () => {
             state: { childName: firstChild.childName },
           });
         } else {
-          navigate('/onboarding', { replace: true });
+          // 토큰은 있지만 아이가 없으면 언어 설정부터 다시
+          navigate('/onboarding', { replace: true, state: { step: 'language' } });
         }
       })
       .catch(() => {
+        // 401 등 인증 실패 시 토큰 초기화 후 로그인
+        authStore.clear();
         navigate('/onboarding', { replace: true });
       });
   }, []);
