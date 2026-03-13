@@ -40,7 +40,13 @@ const dotData = [
 ];
 
 const KO_LEVEL_MAP = { high: 'HIGH', mid: 'MID', low: 'LOW' } as const;
-const RESPONSE_LANG_MAP = { native: 'NATIVE', both: 'BOTH', korean: 'KOREAN' } as const;
+const RESPONSE_LANG_MAP = {
+  ko: 'KOREAN',
+  en: 'ENGLISH',
+  zh: 'CHINESE',
+  ja: 'JAPANESE',
+  vi: 'VIETNAMESE',
+} as const;
 
 interface Props {
   onNext: () => void;
@@ -85,11 +91,7 @@ const LanguageSetup = ({ onNext }: Props) => {
     { value: 'low', label: t('onboarding.language.levelLow') },
   ];
 
-  const RESPONSE_LANGS = [
-    { value: 'native', label: t('onboarding.language.responseNative') },
-    { value: 'both', label: t('onboarding.language.responseBoth') },
-    { value: 'korean', label: t('onboarding.language.responseKorean') },
-  ];
+  const RESPONSE_LANGS = LANGUAGES.map((l) => ({ value: l.code, label: l.label }));
 
   return (
     <Box sx={{ minHeight: '100%', display: 'flex', flexDirection: 'column', px: 3, py: 4, position: 'relative', overflow: 'hidden' }}>
@@ -203,16 +205,15 @@ const LanguageSetup = ({ onNext }: Props) => {
       <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1.5 }}>
         {t('onboarding.language.responseLang')}
       </Typography>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 4 }}>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 4 }}>
         {RESPONSE_LANGS.map((lang) => (
           <Button
             key={lang.value}
             onClick={() => setResponseLang(lang.value)}
             sx={{
-              justifyContent: 'flex-start',
-              borderRadius: 2.5,
-              py: 1.25,
+              borderRadius: '20px',
               px: 2.5,
+              py: 0.75,
               fontSize: 14,
               fontWeight: responseLang === lang.value ? 700 : 500,
               border: responseLang === lang.value
