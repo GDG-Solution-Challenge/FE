@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://mamatolmi-server-163838471205.asia-northeast3.run.app/:path*"
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

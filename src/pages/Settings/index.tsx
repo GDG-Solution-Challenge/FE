@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import bottom2Png from '../../assets/bottom2.png';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -10,68 +12,94 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import CircularProgress from '@mui/material/CircularProgress';
 import GoogleIcon from '@mui/icons-material/Google';
-import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { getUser } from '../../api/user';
+import { getChatRooms } from '../../api/chat';
+import { createKid } from '../../api/kid';
+import { authStore } from '../../store/auth';
 
-// TODO: 실제 데이터로 교체
-const mockAccount = {
-  name: '김부모',
-  email: 'parent@gmail.com',
-  photoUrl: '',
-};
-
-interface Child {
-  id: string;
-  name: string;
-  gender: 'boy' | 'girl';
-  age: number;
+interface ChildItem {
+  childId: number;
+  childName: string;
 }
 
-const mockChildrenInit: Child[] = [
-  { id: '1', name: '김민준', gender: 'boy', age: 5 },
-  { id: '2', name: '김서아', gender: 'girl', age: 4 },
-];
+interface NewChild {
+  name: string;
+  gender: 'boy' | 'girl';
+  birthDate: string;
+}
 
 const Settings = () => {
   const { t } = useTranslation();
-  const [children, setChildren] = useState<Child[]>(mockChildrenInit);
-  const [editTarget, setEditTarget] = useState<Child | null>(null);
+  const navigate = useNavigate();
+  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const [children, setChildren] = useState<ChildItem[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [newChild, setNewChild] = useState<NewChild>({ name: '', gender: 'boy', birthDate: '' });
+  const [saving, setSaving] = useState(false);
 
-  const openEdit = (child: Child) => {
-    setEditTarget({ ...child });
-    setDialogOpen(true);
+  useEffect(() => {
+    const userId = authStore.getUserId();
+    if (!userId) return;
+    getUser(userId)
+      .then((u) => setUser({ name: u.name, email: u.email }))
+      .catch(() => {});
+    getChatRooms(userId)
+      .then((data) => {
+        setChildren(
+          (data.result?.childChatGroups ?? []).map((c) => ({
+            childId: c.childId,
+            childName: c.childName,
+          }))
+        );
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleLogout = () => {
+    authStore.clear();
+    navigate('/onboarding', { replace: true });
   };
 
   const openAdd = () => {
-    setEditTarget({ id: String(Date.now()), name: '', gender: 'boy', age: 5 });
+    setNewChild({ name: '', gender: 'boy', birthDate: '' });
     setDialogOpen(true);
   };
 
-  const handleSave = () => {
-    if (!editTarget) return;
-    setChildren(prev =>
-      prev.some(c => c.id === editTarget.id)
-        ? prev.map(c => (c.id === editTarget.id ? editTarget : c))
-        : [...prev, editTarget]
-    );
-    setDialogOpen(false);
+  const handleAdd = async () => {
+    const userId = authStore.getUserId();
+    if (!userId || !newChild.name.trim() || !newChild.birthDate) return;
+    setSaving(true);
+    try {
+      const res = await createKid(userId, {
+        name: newChild.name.trim(),
+        gender: newChild.gender === 'boy' ? 'MALE' : 'FEMALE',
+        birthDate: newChild.birthDate,
+      });
+      if (res.isSuccess) {
+        setChildren((prev) => [...prev, { childId: res.result.kidId, childName: newChild.name.trim() }]);
+        setDialogOpen(false);
+      }
+    } catch {
+      // 실패 시 다이얼로그 유지
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const handleDelete = (id: string) => {
-    setChildren(prev => prev.filter(c => c.id !== id));
-  };
+  const canAdd = newChild.name.trim() !== '' && newChild.birthDate !== '';
 
   return (
-    <Box sx={{ height: '100%', overflow: 'auto', pt: 6 }}>
+    <Box sx={{ height: '100%', overflow: 'auto', pt: 6, display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ px: 2, pt: 1, pb: 1.5 }}>
         <Typography variant="h5" fontWeight={700}>{t('settings.title')}</Typography>
       </Box>
@@ -84,21 +112,22 @@ const Settings = () => {
       </Box>
       <Box sx={{ mx: 2, mb: 2, p: 2, borderRadius: 2.5, backgroundColor: '#fff', border: '1px solid #E8E8E8', display: 'flex', alignItems: 'center', gap: 2 }}>
         <Avatar sx={{ width: 44, height: 44, backgroundColor: '#4285F4' }}>
-          {mockAccount.photoUrl ? (
-            <Box component="img" src={mockAccount.photoUrl} sx={{ width: '100%', borderRadius: '50%' }} />
-          ) : (
-            <GoogleIcon sx={{ fontSize: 22 }} />
-          )}
+          <GoogleIcon sx={{ fontSize: 22 }} />
         </Avatar>
         <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Typography variant="body2" fontWeight={600} noWrap>{mockAccount.name}</Typography>
-          <Typography variant="caption" color="text.secondary" noWrap>{mockAccount.email}</Typography>
+          <Typography variant="body2" fontWeight={600} noWrap>
+            {user?.name ?? '—'}
+          </Typography>
+          <Typography variant="caption" color="text.secondary" noWrap>
+            {user?.email ?? '—'}
+          </Typography>
         </Box>
         <Button
           size="small"
           variant="outlined"
           color="error"
           sx={{ fontSize: 11, fontWeight: 500, flexShrink: 0 }}
+          onClick={handleLogout}
         >
           {t('settings.logout')}
         </Button>
@@ -117,41 +146,19 @@ const Settings = () => {
       </Box>
 
       <List sx={{ px: 2, pb: 3 }} disablePadding>
+        {children.length === 0 && (
+          <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: 'center' }}>
+            {t('settings.noChildren', '등록된 아이가 없어요')}
+          </Typography>
+        )}
         {children.map((child, i) => (
-          <Box key={child.id}>
-            <ListItem
-              disablePadding
-              sx={{ py: 1.5, display: 'flex', alignItems: 'center', gap: 1.5 }}
-              secondaryAction={
-                <Box sx={{ display: 'flex', gap: 0.5 }}>
-                  <IconButton size="small" onClick={() => openEdit(child)} sx={{ color: 'text.secondary' }}>
-                    <EditIcon sx={{ fontSize: 16 }} />
-                  </IconButton>
-                  <IconButton size="small" onClick={() => handleDelete(child.id)} sx={{ color: '#E53935' }}>
-                    <DeleteOutlineIcon sx={{ fontSize: 16 }} />
-                  </IconButton>
-                </Box>
-              }
-            >
-              <Avatar sx={{ width: 36, height: 36, backgroundColor: child.gender === 'boy' ? '#E3F2FD' : '#FCE4EC' }}>
-                <ChildCareIcon sx={{ fontSize: 18, color: child.gender === 'boy' ? '#1565C0' : '#C62828' }} />
+          <Box key={child.childId}>
+            <ListItem disablePadding sx={{ py: 1.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <Avatar sx={{ width: 36, height: 36, backgroundColor: '#E8F5E9' }}>
+                <ChildCareIcon sx={{ fontSize: 18, color: 'primary.main' }} />
               </Avatar>
               <ListItemText
-                primary={child.name}
-                secondary={
-                  <Box component="span" sx={{ display: 'flex', gap: 0.5, mt: 0.25 }}>
-                    <Chip
-                      label={t(child.gender === 'boy' ? 'onboarding.children.boy' : 'onboarding.children.girl')}
-                      size="small"
-                      sx={{ height: 18, fontSize: 10, backgroundColor: child.gender === 'boy' ? '#E3F2FD' : '#FCE4EC', color: child.gender === 'boy' ? '#1565C0' : '#C62828' }}
-                    />
-                    <Chip
-                      label={`${child.age}${t('settings.ageUnit')}`}
-                      size="small"
-                      sx={{ height: 18, fontSize: 10, backgroundColor: '#F3F3F3', color: 'text.secondary' }}
-                    />
-                  </Box>
-                }
+                primary={child.childName}
                 slotProps={{ primary: { fontWeight: 600, fontSize: '0.875rem' } }}
               />
             </ListItem>
@@ -160,51 +167,71 @@ const Settings = () => {
         ))}
       </List>
 
-      {/* 자녀 편집 다이얼로그 */}
+      {/* 자녀 추가 다이얼로그 */}
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} fullWidth maxWidth="xs">
         <DialogTitle sx={{ fontWeight: 700, fontSize: '1rem', pb: 1 }}>
-          {editTarget && mockChildrenInit.some(c => c.id === editTarget.id)
-            ? t('settings.editChild')
-            : t('settings.addChild')}
+          {t('settings.addChild')}
         </DialogTitle>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
           <TextField
             label={t('onboarding.children.name')}
             size="small"
             fullWidth
-            value={editTarget?.name ?? ''}
-            onChange={e => setEditTarget(prev => prev ? { ...prev, name: e.target.value } : prev)}
+            value={newChild.name}
+            onChange={(e) => setNewChild((prev) => ({ ...prev, name: e.target.value }))}
           />
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            {(['boy', 'girl'] as const).map(g => (
-              <Button
+          <ToggleButtonGroup
+            value={newChild.gender}
+            exclusive
+            onChange={(_, val) => val && setNewChild((prev) => ({ ...prev, gender: val }))}
+            sx={{ gap: 1 }}
+          >
+            {(['boy', 'girl'] as const).map((g) => (
+              <ToggleButton
                 key={g}
-                variant={editTarget?.gender === g ? 'contained' : 'outlined'}
+                value={g}
                 size="small"
-                onClick={() => setEditTarget(prev => prev ? { ...prev, gender: g } : prev)}
-                sx={{ flex: 1, fontWeight: 600 }}
+                sx={{
+                  flex: 1,
+                  borderRadius: '8px !important',
+                  border: '1px solid #E0E0E0 !important',
+                  fontWeight: 600,
+                  '&.Mui-selected': {
+                    backgroundColor: 'primary.main',
+                    color: '#fff',
+                    '&:hover': { backgroundColor: 'primary.dark' },
+                  },
+                }}
               >
                 {t(g === 'boy' ? 'onboarding.children.boy' : 'onboarding.children.girl')}
-              </Button>
+              </ToggleButton>
             ))}
-          </Box>
+          </ToggleButtonGroup>
           <TextField
-            label={t('onboarding.children.age')}
-            type="number"
+            label={t('onboarding.children.birthDate')}
+            type="date"
             size="small"
             fullWidth
-            value={editTarget?.age ?? 5}
-            onChange={e => setEditTarget(prev => prev ? { ...prev, age: Number(e.target.value) } : prev)}
-            slotProps={{ htmlInput: { min: 1, max: 10 } }}
+            value={newChild.birthDate}
+            onChange={(e) => setNewChild((prev) => ({ ...prev, birthDate: e.target.value }))}
+            slotProps={{ inputLabel: { shrink: true } }}
           />
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setDialogOpen(false)} color="inherit" size="small">{t('settings.cancel')}</Button>
-          <Button onClick={handleSave} variant="contained" size="small" disabled={!editTarget?.name.trim()}>
-            {t('settings.save')}
+          <Button onClick={() => setDialogOpen(false)} color="inherit" size="small">
+            {t('settings.cancel')}
+          </Button>
+          <Button
+            onClick={handleAdd}
+            variant="contained"
+            size="small"
+            disabled={!canAdd || saving}
+          >
+            {saving ? <CircularProgress size={16} sx={{ color: '#fff' }} /> : t('settings.save')}
           </Button>
         </DialogActions>
       </Dialog>
+      <Box component="img" src={bottom2Png} alt="" sx={{ width: '100%', display: 'block', pointerEvents: 'none', mt: 'auto' }} />
     </Box>
   );
 };

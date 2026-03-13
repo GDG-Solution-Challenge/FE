@@ -20,7 +20,7 @@ interface Child {
 }
 
 interface Props {
-  onNext: () => void;
+  onNext: (firstKidId?: number) => void;
 }
 
 const ChildrenSetup = ({ onNext }: Props) => {
@@ -51,7 +51,7 @@ const ChildrenSetup = ({ onNext }: Props) => {
     if (!userId) return;
     setLoading(true);
     try {
-      await Promise.all(
+      const results = await Promise.all(
         children.map((child) =>
           createKid(userId, {
             name: child.name,
@@ -60,7 +60,9 @@ const ChildrenSetup = ({ onNext }: Props) => {
           })
         )
       );
-      onNext();
+      const res = results[0] as any;
+      const firstKidId: number | undefined = res?.result?.kidId ?? res?.kidId;
+      onNext(firstKidId);
     } catch {
       // 실패해도 다음 단계로 진행
       onNext();

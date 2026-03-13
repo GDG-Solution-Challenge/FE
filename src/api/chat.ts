@@ -30,9 +30,11 @@ interface ChatRoomCreateResult {
 }
 
 // 채팅 메시지
-interface ChatMessageDetail {
-  role: 'user' | 'assistant';
+export interface ChatMessageDetail {
+  messageId: number;
+  sender: string;
   content: string;
+  createdAt: string;
 }
 
 interface ChatHistoryResult {

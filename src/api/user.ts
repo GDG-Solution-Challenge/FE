@@ -1,16 +1,9 @@
 import client from './client';
 
-interface ApiResponse<T> {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  result: T;
-}
-
 interface OnboardingRequest {
   userId: number;
   koreanLevel: 'HIGH' | 'MID' | 'LOW';
-  responseLanguage: 'KOREAN' | 'NATIVE' | 'BOTH';
+  responseLanguage: 'KOREAN' | 'ENGLISH' | 'CHINESE' | 'JAPANESE' | 'VIETNAMESE';
 }
 
 interface User {
