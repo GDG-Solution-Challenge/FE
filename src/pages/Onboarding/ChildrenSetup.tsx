@@ -60,7 +60,8 @@ const ChildrenSetup = ({ onNext }: Props) => {
           })
         )
       );
-      const firstKidId = results[0]?.result?.kidId;
+      const res = results[0] as any;
+      const firstKidId: number | undefined = res?.result?.kidId ?? res?.kidId;
       onNext(firstKidId);
     } catch {
       // 실패해도 다음 단계로 진행
