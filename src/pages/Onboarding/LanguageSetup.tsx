@@ -25,7 +25,6 @@ const twinkle = keyframes`
 `;
 
 const dotData = [
-  { color: '#FCBE1D', left: '10%', top: '7%',  size: 9,  duration: 2.4, delay: 0.0 },
   { color: '#1C40CF', left: '55%', top: '5%',  size: 7,  duration: 3.1, delay: 0.7 },
   { color: '#F83C00', left: '82%', top: '18%', size: 10, duration: 2.8, delay: 1.2 },
   { color: '#029902', left: '30%', top: '22%', size: 8,  duration: 3.5, delay: 0.4 },
