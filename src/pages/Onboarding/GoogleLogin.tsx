@@ -43,7 +43,7 @@ const GoogleLogin = () => {
 
   const handleLogin = () => {
     const redirectUri = `${window.location.origin}/oauth-success`;
-    window.location.href = `${GOOGLE_OAUTH_URL}?state=${encodeURIComponent(redirectUri)}`;
+    window.location.href = `${GOOGLE_OAUTH_URL}?redirect_uri=${encodeURIComponent(redirectUri)}`;
   };
 
   return (
