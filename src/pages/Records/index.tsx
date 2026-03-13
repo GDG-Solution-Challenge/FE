@@ -1,10 +1,11 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import ChildSummary from './ChildSummary';
 import DailyList from './DailyList';
+import bottom2Png from '../../assets/bottom2.png';
 
 // TODO: 실제 자녀 데이터로 교체
 const mockChildMap: Record<string, string> = {
@@ -15,17 +16,26 @@ const mockChildMap: Record<string, string> = {
 const Records = () => {
   const { childId } = useParams<{ childId: string }>();
   const { t } = useTranslation();
-  const childName = childId ? (mockChildMap[childId] ?? '알 수 없음') : '알 수 없음';
+  const locationState = useLocation().state as { childName?: string } | null;
+  const childName = locationState?.childName ?? (childId ? (mockChildMap[childId] ?? '알 수 없음') : '알 수 없음');
 
   return (
-    <Box sx={{ height: '100%', overflow: 'auto', pt: 6 }}>
-      <Box sx={{ px: 2, pt: 1, pb: 1.5 }}>
-        <Typography variant="h5" fontWeight={700}>{childName}</Typography>
-        <Typography variant="caption" color="text.secondary">{t('records.archive')}</Typography>
+    <Box sx={{ height: '100%', position: 'relative' }}>
+      <Box sx={{ height: '100%', overflow: 'auto', pt: 6 }}>
+        <Box sx={{ px: 2, pt: 1, pb: 1.5 }}>
+          <Typography variant="h5" fontWeight={700}>{childName}</Typography>
+          <Typography variant="caption" color="text.secondary">{t('records.archive')}</Typography>
+        </Box>
+        <ChildSummary childName={childName} />
+        <Divider sx={{ mx: 2, borderColor: '#F0F0F0' }} />
+        <DailyList childId={childId ?? ''} />
       </Box>
-      <ChildSummary childName={childName} />
-      <Divider sx={{ mx: 2, borderColor: '#F0F0F0' }} />
-      <DailyList childId={childId ?? ''} />
+      <Box
+        component="img"
+        src={bottom2Png}
+        alt=""
+        sx={{ position: 'absolute', bottom: 0, left: 0, width: '100%', pointerEvents: 'none', zIndex: 0 }}
+      />
     </Box>
   );
 };

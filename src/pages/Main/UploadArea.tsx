@@ -26,7 +26,7 @@ const UploadArea = ({ input, onInputChange, onSend, onImageUpload, disabled }: P
   };
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1, px: 2, py: 1.5, borderTop: '1px solid #F0F0F0', backgroundColor: '#fff' }}>
+    <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1, px: 2, py: 1.5, borderTop: '1px solid #F0F0F0', backgroundColor: '#fff', position: 'relative', zIndex: 1 }}>
       <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => e.target.files?.[0] && onImageUpload(e.target.files[0])} />
       <IconButton onClick={() => fileRef.current?.click()} disabled={disabled} size="small" sx={{ color: 'text.secondary', flexShrink: 0 }}>
         <ImageIcon />
