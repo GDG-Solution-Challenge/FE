@@ -17,7 +17,7 @@ const Onboarding = () => {
     : 'login';
   const [step, setStep] = useState<Step>(initialStep);
 
-  const progress = ((STEPS.indexOf(step) + 1) / STEPS.length) * 100;
+  const progress = (STEPS.indexOf(step) / STEPS.length) * 100;
 
   return (
     <Box sx={{ width: '100%', height: '100dvh', display: 'flex', flexDirection: 'column', backgroundColor: '#fff' }}>
