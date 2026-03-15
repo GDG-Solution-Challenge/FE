@@ -60,8 +60,11 @@ const ChildrenSetup = ({ onNext }: Props) => {
           })
         )
       );
-      const res = results[0] as any;
-      const firstKidId: number | undefined = res?.result?.kidId ?? res?.kidId;
+      results.forEach((res, i) => {
+        const kidId: number | undefined = (res as any)?.result?.kidId ?? (res as any)?.kidId;
+        if (kidId) authStore.addLocalKid({ kidId, name: children[i].name });
+      });
+      const firstKidId: number | undefined = (results[0] as any)?.result?.kidId ?? (results[0] as any)?.kidId;
       onNext(firstKidId);
     } catch {
       // 실패해도 다음 단계로 진행
