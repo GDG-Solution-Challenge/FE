@@ -2,7 +2,7 @@ import client from './client';
 
 interface OnboardingRequest {
   userId: number;
-  koreanLevel: 'HIGH' | 'MID' | 'LOW';
+  koreanLevel: 'HIGH' | 'MEDIUM' | 'LOW';
   responseLanguage: 'KOREAN' | 'ENGLISH' | 'CHINESE' | 'JAPANESE' | 'VIETNAMESE';
 }
 
