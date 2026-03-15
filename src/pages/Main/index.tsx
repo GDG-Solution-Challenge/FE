@@ -34,10 +34,12 @@ const Main = () => {
     setLoading(true);
     getChatMessages(locationRoomId)
       .then((data) => {
-        const msgs: Message[] = (data.result?.messages ?? []).map((m) => ({
-          role: m.sender === 'USER' ? ('user' as const) : ('assistant' as const),
-          content: m.content,
-        }));
+        const msgs: Message[] = (data.result?.messages ?? [])
+          .filter((m) => !(m.sender === 'USER' && m.content === '키즈노트를 분석해줘'))
+          .map((m) => ({
+            role: m.sender === 'USER' ? ('user' as const) : ('assistant' as const),
+            content: m.content,
+          }));
         setMessages(msgs);
       })
       .catch(() => {})
@@ -124,6 +126,7 @@ const Main = () => {
         onSend={handleSend}
         onImageUpload={handleImageUpload}
         disabled={loading}
+        sendDisabled={!roomId}
       />
     </Box>
   );
