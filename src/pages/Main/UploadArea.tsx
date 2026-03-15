@@ -12,9 +12,10 @@ interface Props {
   onSend: () => void;
   onImageUpload: (file: File) => void;
   disabled?: boolean;
+  sendDisabled?: boolean;
 }
 
-const UploadArea = ({ input, onInputChange, onSend, onImageUpload, disabled }: Props) => {
+const UploadArea = ({ input, onInputChange, onSend, onImageUpload, disabled, sendDisabled }: Props) => {
   const { t } = useTranslation();
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -38,7 +39,7 @@ const UploadArea = ({ input, onInputChange, onSend, onImageUpload, disabled }: P
         onKeyDown={handleKeyDown} disabled={disabled} size="small"
         sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3, fontSize: 14, backgroundColor: '#F7F7F7', '& fieldset': { border: 'none' } } }}
       />
-      <IconButton onClick={onSend} disabled={disabled || !input.trim()} size="small"
+      <IconButton onClick={onSend} disabled={disabled || sendDisabled || !input.trim()} size="small"
         sx={{ backgroundColor: 'primary.main', color: '#fff', flexShrink: 0, '&:hover': { backgroundColor: 'primary.dark' }, '&:disabled': { backgroundColor: '#E0E0E0', color: '#fff' } }}>
         <SendIcon fontSize="small" />
       </IconButton>
