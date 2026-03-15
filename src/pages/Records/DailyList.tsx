@@ -1,65 +1,133 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import { getChatRooms } from '../../api/chat';
+import { authStore } from '../../store/auth';
+import type { DailyRecord } from '../../api/kid';
 
-interface DayRecord {
-  date: string;
-  dayLabel: string;
-  hasRecord: boolean;
-  summary?: string;
+const DAY_LABELS = ['월', '화', '수', '목', '금'];
+
+const DAY_OF_WEEK_MAP: Record<string, string> = {
+  MONDAY: '월', TUESDAY: '화', WEDNESDAY: '수', THURSDAY: '목', FRIDAY: '금',
+  SATURDAY: '토', SUNDAY: '일',
+};
+
+function parseDateLabel(dateStr: string | null | undefined): string {
+  if (!dateStr) return '—';
+  const iso = dateStr.slice(0, 10);
+  const parts = iso.split('-');
+  if (parts.length < 3) return '—';
+  const m = Number(parts[1]);
+  const d = parts[2];
+  return isNaN(m) ? '—' : `${m}/${d}`;
 }
 
-// TODO: 실제 데이터로 교체
-const mockRecords: DayRecord[] = [
-  { date: '02/17', dayLabel: '월', hasRecord: true, summary: '미술 활동: 봄 꽃 그리기. 준비물: 물감, 앞치마' },
-  { date: '02/18', dayLabel: '화', hasRecord: true, summary: '신체 활동: 줄넘기. 내일 준비물: 운동화' },
-  { date: '02/19', dayLabel: '수', hasRecord: false },
-  { date: '02/20', dayLabel: '목', hasRecord: false },
-  { date: '02/21', dayLabel: '금', hasRecord: false },
-];
+function getThisWeekDates() {
+  const today = new Date();
+  const day = today.getDay();
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - (day === 0 ? 6 : day - 1));
+  return Array.from({ length: 5 }, (_, i) => {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    return {
+      dayLabel: DAY_LABELS[i],
+      dateLabel: `${d.getMonth() + 1}/${String(d.getDate()).padStart(2, '0')}`,
+      isoDate: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`,
+    };
+  });
+}
+
+const todayLabel = (() => {
+  const d = new Date();
+  const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+  return `${d.getMonth() + 1}/${String(d.getDate()).padStart(2, '0')} (${dayNames[d.getDay()]})`;
+})();
 
 interface Props {
   childId: string;
+  childName?: string;
+  weeklyRecords?: DailyRecord[];
 }
 
-const DailyList = ({ childId }: Props) => {
+const DailyList = ({ childId, childName, weeklyRecords }: Props) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [roomMap, setRoomMap] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    const userId = authStore.getUserId();
+    if (!userId) return;
+    getChatRooms(userId)
+      .then((data) => {
+        const group = (data.result?.childChatGroups ?? []).find(
+          (g) => String(g.childId) === childId
+        );
+        if (!group) return;
+        const map: Record<string, number> = {};
+        for (const room of group.chatRooms) {
+          map[room.date.slice(0, 10)] = room.roomId;
+        }
+        setRoomMap(map);
+      })
+      .catch(() => {});
+  }, [childId]);
+
+  // dashboard weeklyRecords가 있으면 그걸 쓰고, 없으면 이번 주 날짜 생성
+  const weekDates = weeklyRecords
+    ? weeklyRecords.map((r) => ({
+        dayLabel: DAY_OF_WEEK_MAP[r.dayOfWeek] ?? r.dayOfWeek,
+        dateLabel: parseDateLabel(r.date),
+        isoDate: r.date?.slice(0, 10) ?? '',
+        isExist: r.isExist,
+        content: r.content,
+      }))
+    : getThisWeekDates().map((d) => ({ ...d, isExist: false, content: '' }));
 
   return (
     <Box sx={{ px: 2, pb: 3 }}>
       <Typography variant="caption" fontWeight={600} color="text.secondary" sx={{ display: 'block', mb: 1.5, px: 0.5 }}>
-        {t('records.weeklyRecords')}
+        {todayLabel}
       </Typography>
-      {mockRecords.map((record, i) => (
-        <Box key={record.date}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', py: 1.75, gap: 1.5 }}>
-            <Box sx={{ textAlign: 'center', minWidth: 36, flexShrink: 0 }}>
-              <Typography variant="caption" color="text.secondary" fontWeight={500}>{record.dayLabel}</Typography>
-              <Typography variant="body2" fontWeight={600}>{record.date}</Typography>
+      {weekDates.map((day, i) => {
+        const roomId = roomMap[day.isoDate];
+        const hasRecord = day.isExist || roomId !== undefined;
+        return (
+          <Box key={day.isoDate}>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', py: 1.75, gap: 1.5 }}>
+              <Box sx={{ textAlign: 'center', minWidth: 36, flexShrink: 0 }}>
+                <Typography variant="caption" color="text.secondary" fontWeight={500}>{day.dayLabel}</Typography>
+                <Typography variant="body2" fontWeight={600}>{day.dateLabel}</Typography>
+              </Box>
+              {hasRecord ? (
+                <Box
+                  onClick={() => navigate(`/child/${childId}`, { state: { childName, roomId } })}
+                  sx={{ flex: 1, p: 1.5, borderRadius: 2, backgroundColor: '#1A1A1A', display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer', '&:active': { backgroundColor: '#333' } }}
+                >
+                  <ChatBubbleIcon sx={{ fontSize: 14, color: '#fff', flexShrink: 0 }} />
+                  <Typography variant="caption" sx={{ lineHeight: 1.6, color: '#fff', fontWeight: 500 }} noWrap>
+                    {day.content || t('records.hasRecord', '기록이 있어요')}
+                  </Typography>
+                </Box>
+              ) : (
+                <Box
+                  onClick={() => navigate(`/child/${childId}`, { state: { childName } })}
+                  sx={{ flex: 1, p: 1.5, borderRadius: 2, backgroundColor: '#F5F5F5', display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer', '&:active': { backgroundColor: '#EBEBEB' } }}
+                >
+                  <ChatBubbleOutlineIcon sx={{ fontSize: 14, color: '#BDBDBD', flexShrink: 0 }} />
+                  <Typography variant="caption" sx={{ lineHeight: 1.6, color: '#BDBDBD' }}>{t('records.noRecord')}</Typography>
+                </Box>
+              )}
             </Box>
-            {record.hasRecord ? (
-              <Box sx={{ flex: 1, p: 1.5, borderRadius: 2, backgroundColor: '#F0F7EE', border: '1px solid #25671E22', display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-                <CheckCircleIcon sx={{ fontSize: 16, color: 'primary.main', mt: 0.2, flexShrink: 0 }} />
-                <Typography variant="caption" sx={{ lineHeight: 1.6 }}>{record.summary}</Typography>
-              </Box>
-            ) : (
-              <Box onClick={() => navigate(`/child/${childId}`)} sx={{ flex: 1, p: 1.5, borderRadius: 2, backgroundColor: '#F9F9F9', border: '1px dashed #E0E0E0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', '&:active': { backgroundColor: '#F0F0F0' } }}>
-                <Typography variant="caption" color="text.secondary">{t('records.noRecord')}</Typography>
-                <Button size="small" startIcon={<AddPhotoAlternateIcon sx={{ fontSize: 14 }} />} sx={{ fontSize: 11, fontWeight: 500, py: 0.25, px: 1, minWidth: 0, color: 'text.secondary' }} onClick={(e) => e.stopPropagation()}>
-                  {t('records.upload')}
-                </Button>
-              </Box>
-            )}
+            {i < weekDates.length - 1 && <Divider sx={{ borderColor: '#F5F5F5' }} />}
           </Box>
-          {i < mockRecords.length - 1 && <Divider sx={{ borderColor: '#F5F5F5' }} />}
-        </Box>
-      ))}
+        );
+      })}
     </Box>
   );
 };
