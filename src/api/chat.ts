@@ -47,8 +47,10 @@ interface ChatResponseDTO {
 }
 
 export async function getChatRooms(userId: number): Promise<ApiResponse<ChatSidebarResult>> {
-  const { data } = await client.get<ApiResponse<ChatSidebarResult>>('/chat/rooms', { params: { userId } });
-  return data;
+  const { data } = await client.get<any>('/chat/rooms', { params: { userId } });
+  // {result: {childChatGroups}} 또는 {childChatGroups} 두 형태 모두 처리
+  const groups: ChildChatGroup[] = data?.result?.childChatGroups ?? data?.childChatGroups ?? [];
+  return { isSuccess: data?.isSuccess ?? true, code: data?.code ?? '', message: data?.message ?? '', result: { childChatGroups: groups } };
 }
 
 export async function createChatRoom(userId: number, kidsNoteId: number): Promise<ApiResponse<ChatRoomCreateResult>> {
