@@ -50,6 +50,6 @@ export const authStore = {
   clear: () => {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_ID_KEY);
-    localStorage.removeItem(LOCAL_KIDS_KEY);
+    // localKids는 재로그인 시 복구를 위해 유지
   },
 };

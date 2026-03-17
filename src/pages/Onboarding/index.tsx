@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import GoogleLogin from './GoogleLogin';
 import LanguageSetup from './LanguageSetup';
 import ChildrenSetup from './ChildrenSetup';
+import { authStore } from '../../store/auth';
 
 const STEPS = ['login', 'language', 'children'] as const;
 type Step = (typeof STEPS)[number];
@@ -12,10 +13,18 @@ type Step = (typeof STEPS)[number];
 const Onboarding = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const initialStep = (STEPS as readonly string[]).includes((location.state as { step?: string })?.step ?? '')
-    ? ((location.state as { step: Step }).step)
+  const locationStep = (location.state as { step?: string })?.step;
+  const initialStep = (STEPS as readonly string[]).includes(locationStep ?? '')
+    ? (locationStep as Step)
     : 'login';
   const [step, setStep] = useState<Step>(initialStep);
+
+  useEffect(() => {
+    // 이미 로그인된 상태에서 language/children 단계가 아닌 경우 홈으로
+    if (step === 'login' && authStore.getToken() && authStore.getUserId()) {
+      navigate('/', { replace: true });
+    }
+  }, []);
 
   const progress = (STEPS.indexOf(step) / STEPS.length) * 100;
 
