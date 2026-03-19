@@ -38,7 +38,7 @@ const dotData = [
   { color: '#029902', left: '60%', top: '90%', size: 6,  duration: 3.2, delay: 0.3 },
 ];
 
-const KO_LEVEL_MAP = { high: 'HIGH', mid: 'MID', low: 'LOW' } as const;
+const KO_LEVEL_MAP = { high: 'HIGH', mid: 'MEDIUM', low: 'LOW' } as const;
 const RESPONSE_LANG_MAP = {
   ko: 'KOREAN',
   en: 'ENGLISH',

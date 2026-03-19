@@ -10,6 +10,7 @@ import Records from "./pages/Records";
 import Settings from "./pages/Settings";
 import { authStore } from "./store/auth";
 import { getChatRooms } from "./api/chat";
+import { getUser } from "./api/user";
 
 const RootRedirect = () => {
   const navigate = useNavigate();
@@ -32,14 +33,46 @@ const RootRedirect = () => {
             state: { childName: firstChild.childName },
           });
         } else {
-          // 토큰은 있지만 아이가 없으면 언어 설정부터 다시
-          navigate('/onboarding', { replace: true, state: { step: 'language' } });
+          // chatRooms 없으면 localKids 확인
+          const localKids = authStore.getLocalKids();
+          if (localKids.length > 0) {
+            navigate(`/child/${localKids[0].kidId}`, {
+              replace: true,
+              state: { childName: localKids[0].name },
+            });
+          } else {
+            // localKids도 없으면 getUser로 온보딩 단계 판단
+            getUser(userId)
+              .then((user) => {
+                if (!user.koreanLevel) {
+                  navigate('/onboarding', { replace: true, state: { step: 'language' } });
+                } else {
+                  navigate('/onboarding', { replace: true, state: { step: 'children' } });
+                }
+              })
+              .catch(() => {
+                navigate('/onboarding', { replace: true, state: { step: 'language' } });
+              });
+          }
         }
       })
-      .catch(() => {
-        // 401 등 인증 실패 시 토큰 초기화 후 로그인
-        authStore.clear();
-        navigate('/onboarding', { replace: true });
+      .catch((err) => {
+        if (err?.response?.status === 401) {
+          // 인증 만료: 토큰 초기화 후 로그인
+          authStore.clear();
+          navigate('/onboarding', { replace: true });
+        } else {
+          // 네트워크/서버 오류: 토큰 유지, localKids로 복구
+          const localKids = authStore.getLocalKids();
+          if (localKids.length > 0) {
+            navigate(`/child/${localKids[0].kidId}`, {
+              replace: true,
+              state: { childName: localKids[0].name },
+            });
+          } else {
+            navigate('/onboarding', { replace: true, state: { step: 'language' } });
+          }
+        }
       });
   }, []);
 

@@ -35,13 +35,24 @@ const OAuthSuccess = () => {
         }
 
         const chatData = await getChatRooms(userId);
-        const firstChild = chatData.result?.childChatGroups?.[0];
+        const childGroups = chatData.result?.childChatGroups ?? [];
 
+        // 서버 kids → localKids 동기화 (로그아웃 후 재로그인에도 복구)
+        childGroups.forEach((g) => authStore.addLocalKid({ kidId: g.childId, name: g.childName }));
+
+        const firstChild = childGroups[0];
         if (firstChild) {
-          navigate(`/child/${firstChild.childId}`, { replace: true });
+          navigate(`/child/${firstChild.childId}`, { replace: true, state: { childName: firstChild.childName } });
         } else {
-          // koreanLevel은 있지만 아이가 없으면 아이 등록 단계로
-          navigate('/onboarding', { replace: true, state: { step: 'children' } });
+          const localKids = authStore.getLocalKids();
+          if (localKids.length > 0) {
+            navigate(`/child/${localKids[0].kidId}`, {
+              replace: true,
+              state: { childName: localKids[0].name },
+            });
+          } else {
+            navigate('/onboarding', { replace: true, state: { step: 'children' } });
+          }
         }
       } catch {
         navigate('/onboarding', { replace: true, state: { step: 'language' } });

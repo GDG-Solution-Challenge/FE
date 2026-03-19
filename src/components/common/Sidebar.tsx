@@ -56,7 +56,12 @@ const SidebarDrawer = ({ open, onClose }: DrawerProps) => {
     if (!userId) return;
     getChatRooms(userId)
       .then((data) => {
-        setChildGroups(data.result?.childChatGroups ?? []);
+        const serverGroups = data.result?.childChatGroups ?? [];
+        const serverIds = new Set(serverGroups.map((g) => g.childId));
+        const localOnly = authStore.getLocalKids()
+          .filter((k) => !serverIds.has(k.kidId))
+          .map((k) => ({ childId: k.kidId, childName: k.name, chatRooms: [] }));
+        setChildGroups([...serverGroups, ...localOnly]);
       })
       .catch(() => {});
   }, [open]);

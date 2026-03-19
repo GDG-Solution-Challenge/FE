@@ -23,6 +23,23 @@ interface ChatSidebarResult {
   childChatGroups: ChildChatGroup[];
 }
 
+type ChatRoomsResponse = ApiResponse<ChatSidebarResult> | ChatSidebarResult;
+
+function normalizeChatRoomsResponse(data: ChatRoomsResponse): ApiResponse<ChatSidebarResult> {
+  if ('result' in data) {
+    return data;
+  }
+
+  return {
+    isSuccess: true,
+    code: '',
+    message: '',
+    result: {
+      childChatGroups: data.childChatGroups ?? [],
+    },
+  };
+}
+
 // 채팅방 생성
 interface ChatRoomCreateResult {
   chatRoomId: number;
@@ -47,8 +64,8 @@ interface ChatResponseDTO {
 }
 
 export async function getChatRooms(userId: number): Promise<ApiResponse<ChatSidebarResult>> {
-  const { data } = await client.get<ApiResponse<ChatSidebarResult>>('/chat/rooms', { params: { userId } });
-  return data;
+  const { data } = await client.get<ChatRoomsResponse>('/chat/rooms', { params: { userId } });
+  return normalizeChatRoomsResponse(data);
 }
 
 export async function createChatRoom(userId: number, kidsNoteId: number): Promise<ApiResponse<ChatRoomCreateResult>> {

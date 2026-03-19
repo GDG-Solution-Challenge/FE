@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Background -->
+  <rect width="64" height="64" rx="14" fill="#FFFFFF"/>
+
+  <!-- 파랑 큰 반짝이 (좌하단) -->
+  <path d="M20 44 L22 38 L24 44 L30 46 L24 48 L22 54 L20 48 L14 46 Z" fill="#4285F4"/>
+
+  <!-- 노랑 중간 반짝이 (우상단) -->
+  <path d="M40 20 L42 15 L44 20 L49 22 L44 24 L42 29 L40 24 L35 22 Z" fill="#F2B50B"/>
+
+  <!-- 빨강 작은 반짝이 (우하단) -->
+  <path d="M46 40 L47 37 L48 40 L51 41 L48 42 L47 45 L46 42 L43 41 Z" fill="#EA4335"/>
+</svg>

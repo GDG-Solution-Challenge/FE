@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import bottom2Png from '../../assets/bottom2.png';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import i18n from '../../i18n';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -22,7 +23,7 @@ import AddIcon from '@mui/icons-material/Add';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { getUser } from '../../api/user';
+import { getUser, patchOnboarding } from '../../api/user';
 import { getChatRooms } from '../../api/chat';
 import { createKid } from '../../api/kid';
 import { authStore } from '../../store/auth';
@@ -42,6 +43,7 @@ const Settings = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const [koreanLevel, setKoreanLevel] = useState<'HIGH' | 'MEDIUM' | 'LOW'>('MEDIUM');
   const [children, setChildren] = useState<ChildItem[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [newChild, setNewChild] = useState<NewChild>({ name: '', gender: 'boy', birthDate: '' });
@@ -51,16 +53,24 @@ const Settings = () => {
     const userId = authStore.getUserId();
     if (!userId) return;
     getUser(userId)
-      .then((u) => setUser({ name: u.name, email: u.email }))
+      .then((u) => {
+        setUser({ name: u.name, email: u.email });
+        if (u.koreanLevel === 'HIGH' || u.koreanLevel === 'MEDIUM' || u.koreanLevel === 'LOW') {
+          setKoreanLevel(u.koreanLevel);
+        }
+      })
       .catch(() => {});
     getChatRooms(userId)
       .then((data) => {
-        setChildren(
-          (data.result?.childChatGroups ?? []).map((c) => ({
-            childId: c.childId,
-            childName: c.childName,
-          }))
-        );
+        const serverList = (data.result?.childChatGroups ?? []).map((c) => ({
+          childId: c.childId,
+          childName: c.childName,
+        }));
+        const serverIds = new Set(serverList.map((c) => c.childId));
+        const localOnly = authStore.getLocalKids()
+          .filter((k) => !serverIds.has(k.kidId))
+          .map((k) => ({ childId: k.kidId, childName: k.name }));
+        setChildren([...serverList, ...localOnly]);
       })
       .catch(() => {});
   }, []);
@@ -86,7 +96,9 @@ const Settings = () => {
         birthDate: newChild.birthDate,
       });
       if (res.isSuccess) {
-        setChildren((prev) => [...prev, { childId: res.result.kidId, childName: newChild.name.trim() }]);
+        const name = newChild.name.trim();
+        authStore.addLocalKid({ kidId: res.result.kidId, name });
+        setChildren((prev) => [...prev, { childId: res.result.kidId, childName: name }]);
         setDialogOpen(false);
       }
     } catch {
@@ -131,6 +143,53 @@ const Settings = () => {
         >
           {t('settings.logout')}
         </Button>
+      </Box>
+
+      <Divider sx={{ mx: 2, borderColor: '#F0F0F0', mb: 2 }} />
+
+      {/* 언어 설정 섹션 */}
+      <Box sx={{ px: 2, pb: 0.5 }}>
+        <Typography variant="caption" fontWeight={600} color="text.secondary" sx={{ letterSpacing: 0.5 }}>
+          {t('settings.language')}
+        </Typography>
+      </Box>
+      <Box sx={{ mx: 2, mb: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+        {([
+          { code: 'ko', label: '한국어' },
+          { code: 'en', label: 'English' },
+          { code: 'zh', label: '中文' },
+          { code: 'ja', label: '日本語' },
+          { code: 'vi', label: 'Tiếng Việt' },
+        ] as const).map(({ code, label }) => {
+          const selected = i18n.language === code;
+          const LANG_MAP = {
+            ko: 'KOREAN', en: 'ENGLISH', zh: 'CHINESE', ja: 'JAPANESE', vi: 'VIETNAMESE',
+          } as const;
+          return (
+            <Box
+              key={code}
+              onClick={() => {
+                i18n.changeLanguage(code);
+                localStorage.setItem('appLanguage', code);
+                const userId = authStore.getUserId();
+                if (userId) {
+                  patchOnboarding({ userId, koreanLevel, responseLanguage: LANG_MAP[code] }).catch(() => {});
+                }
+              }}
+              sx={{
+                px: 2, py: 0.75, borderRadius: 5, cursor: 'pointer',
+                border: selected ? '1.5px solid' : '1.5px solid #E0E0E0',
+                borderColor: selected ? 'primary.main' : '#E0E0E0',
+                backgroundColor: selected ? '#F0F7EE' : '#fff',
+                transition: 'all 0.15s',
+              }}
+            >
+              <Typography variant="caption" fontWeight={selected ? 700 : 400} color={selected ? 'primary.main' : 'text.secondary'}>
+                {label}
+              </Typography>
+            </Box>
+          );
+        })}
       </Box>
 
       <Divider sx={{ mx: 2, borderColor: '#F0F0F0', mb: 2 }} />

@@ -2,7 +2,7 @@ import client from './client';
 
 interface OnboardingRequest {
   userId: number;
-  koreanLevel: 'HIGH' | 'MID' | 'LOW';
+  koreanLevel: 'HIGH' | 'MEDIUM' | 'LOW';
   responseLanguage: 'KOREAN' | 'ENGLISH' | 'CHINESE' | 'JAPANESE' | 'VIETNAMESE';
 }
 
@@ -17,11 +17,11 @@ interface User {
 }
 
 export async function patchOnboarding(data: OnboardingRequest): Promise<User> {
-  const { data: res } = await client.patch<User>('/users/onboarding', data);
-  return res;
+  const { data: res } = await client.patch<any>('/users/onboarding', data);
+  return res?.result ?? res;
 }
 
 export async function getUser(userId: number): Promise<User> {
-  const { data: res } = await client.get<User>(`/users/${userId}`);
-  return res;
+  const { data: res } = await client.get<any>(`/users/${userId}`);
+  return res?.result ?? res;
 }

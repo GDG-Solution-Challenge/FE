@@ -7,6 +7,8 @@ import zh from './locales/zh.json';
 import ja from './locales/ja.json';
 import vi from './locales/vi.json';
 
+const savedLang = localStorage.getItem('appLanguage') ?? 'ko';
+
 i18n.use(initReactI18next).init({
   resources: {
     ko: { translation: ko },
@@ -15,7 +17,7 @@ i18n.use(initReactI18next).init({
     ja: { translation: ja },
     vi: { translation: vi },
   },
-  lng: 'ko',
+  lng: savedLang,
   fallbackLng: 'ko',
   interpolation: { escapeValue: false },
 });
